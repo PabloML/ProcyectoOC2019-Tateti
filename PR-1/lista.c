@@ -89,7 +89,7 @@ extern void l_eliminar(tLista l, tPosicion p, void (*fEliminar)(tElemento))
                       p->siguiente=posSiguiente;
                       pos->siguiente=POS_NULA;
                   }
-                  pos=POS_NULA;
+                  pos->elemento=ELE_NULO;
                   free(pos);
                }
  }
@@ -231,6 +231,7 @@ extern void l_destruir(tLista * l, void (*fEliminar)(tElemento))
             fEliminar(pos->elemento);
             pos->siguiente=POS_NULA;
          }
+         pos->elemento=ELE_NULO;
          free(pos);
          pos=posSiguiente;
      }

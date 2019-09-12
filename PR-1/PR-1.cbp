@@ -37,7 +37,7 @@
 		<Unit filename="lista.h">
 			<Option compile="1" />
 		</Unit>
-		<Unit filename="main.c">
+		<Unit filename="pruebaLista.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>
