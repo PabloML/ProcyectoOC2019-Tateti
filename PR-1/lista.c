@@ -1,0 +1,238 @@
+/**
+ * TDA Lista.
+ * @author Pablo Lencina
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include "lista.h"
+
+#define LST_ELEMENTO_NULO           1
+#define LST_NO_EXISTE_SIGUIENTE     2
+#define LST_NO_EXISTE_ANTERIOR      3
+#define LST_POSICION_INVALIDA       4
+#define LST_ERROR_MEMORIA           5
+#define POS_NULA NULL
+#define ELE_NULO NULL
+
+/**
+ Inicializa una lista vacía.
+ Una referencia a la lista creada es referenciada en *L.
+**/
+extern void crear_lista(tLista * l)
+ {
+     (*l)=(tLista)malloc(sizeof(struct celda));
+     (*l)->elemento=ELE_NULO;
+     (*l)->siguiente=POS_NULA;
+ }
+
+/**
+ Inserta el elemento E, en la posición P, en L.
+ Con L = A,B,C,D y la posición P direccionando C, luego:
+ L' = A,B,E,C,D
+**/
+extern void l_insertar(tLista l, tPosicion p, tElemento e)
+{
+    if (l==POS_NULA)
+    {
+        return (void) LST_ERROR_MEMORIA;
+    }
+    else if (l->siguiente==POS_NULA)
+         {
+            l->siguiente=(tLista)malloc(sizeof(struct celda));
+            p=(struct celda*)l;
+            p->siguiente->elemento=e;
+            l=(struct celda*)p;
+         }
+         else if (p==POS_NULA)
+              {
+                 return (void) LST_POSICION_INVALIDA;
+              }
+              else {
+                      tPosicion pos=l;
+                      while (pos->siguiente!=p)
+                      {
+                         pos=pos->siguiente;
+                      }
+                      tPosicion position= (tLista)malloc(sizeof(struct celda));
+                      position->elemento=e;
+                      position->siguiente=p;
+                      pos->siguiente=position;
+                   }
+}
+
+ /**
+ Elimina el nodo que se encuentra en la posición P de L.
+ El elemento almacenado en la posición P es eliminado mediante la función fEliminar parametrizada.
+ Si P es fin(L), finaliza indicando LST_POSICION_INVALIDA.
+**/
+extern void l_eliminar(tLista l, tPosicion p, void (*fEliminar)(tElemento))
+ {
+     if (l==POS_NULA)
+     {
+         return (void) LST_ERROR_MEMORIA;
+     }
+     else if (p==POS_NULA)
+           {
+              return (void) LST_POSICION_INVALIDA;
+           }
+     else if (p->siguiente==POS_NULA)
+          {
+             return (void) LST_POSICION_INVALIDA;
+          }
+          else {
+                  fEliminar(p->siguiente->elemento);
+                  tPosicion pos=p->siguiente;
+                  if (p!=(struct celda*)l)
+                  {
+                      tPosicion posSiguiente=pos->siguiente;
+                      p->siguiente=posSiguiente;
+                      pos->siguiente=POS_NULA;
+                  }
+                  pos=POS_NULA;
+                  free(pos);
+               }
+ }
+
+ /**
+ Recupera y retorna la primera posición de L.
+ Si L es vacía, primera(L) = ultima(L) = fin(L).
+**/
+extern tPosicion l_primera(tLista l)
+ {
+     tPosicion pos=(struct celda*)l;
+     return pos;
+ }
+
+ /**
+ Recupera y retorna la última posición de L.
+ Si L es vacía, primera(L) = ultima(L) = fin(L).
+**/
+extern tPosicion l_ultima(tLista l)
+ {
+     tPosicion pos=POS_NULA;
+     if (l!=POS_NULA)
+     {
+        if (l->siguiente==POS_NULA)
+        {
+            pos=(struct celda*)l;
+        }
+        else {
+                pos=(struct celda*)l;
+                while (pos->siguiente->siguiente!=POS_NULA)
+                {
+                  pos=pos->siguiente;
+                }
+             }
+     }
+     return pos;
+ }
+
+ /**
+ Recupera y retorna la posición anterior a P en L.
+ Si P es primera(L), finaliza indicando LST_NO_EXISTE_ANTERIOR.
+**/
+extern tPosicion l_anterior(tLista l, tPosicion p)
+ {
+     tPosicion pos=POS_NULA;
+     if (p==POS_NULA)
+     {
+         return (tPosicion) LST_POSICION_INVALIDA;
+     }
+     else if (l!=POS_NULA)
+          {
+             if (l->siguiente==POS_NULA)
+             {
+                 return (tPosicion) LST_NO_EXISTE_ANTERIOR;
+             }
+             else {
+                    tPosicion pos=l;
+                    while (pos->siguiente!=p)
+                    {
+                      pos=pos->siguiente;
+                    }
+                  }
+          }
+     return pos;
+ }
+
+  /**
+ Recupera y retorna la posición siguiente a P en L.
+ Si P es fin(L), finaliza indicando LST_NO_EXISTE_SIGUIENTE.
+**/
+extern tPosicion l_siguiente(tLista l, tPosicion p)
+ {
+     tPosicion pos=POS_NULA;
+     if (p==POS_NULA)
+     {
+         return (tPosicion) LST_POSICION_INVALIDA;
+     }
+     if (l!=POS_NULA)
+     {
+         if (p->siguiente==POS_NULA)
+         {
+             return (tPosicion) LST_NO_EXISTE_SIGUIENTE;
+         }
+         else pos=p->siguiente;
+     }
+
+    return pos;
+ }
+
+/**
+ Recupera y retorna la posición fin de L.
+ Si L es vacía, primera(L) = ultima(L) = fin(L).
+**/
+extern tPosicion l_fin(tLista l)
+{
+   tPosicion pos=l;
+   while (pos->siguiente!=POS_NULA)
+   {
+      pos=pos->siguiente;
+   }
+   return pos;
+}
+
+/**
+ Recupera y retorna el elemento en la posición P.
+ Si P es fin(L), finaliza indicando LST_POSICION_INVALIDA.
+**/
+extern tElemento l_recuperar(tLista l, tPosicion p)
+ {
+     tElemento elem=(tElemento) LST_ELEMENTO_NULO;
+     if (l==POS_NULA)
+     {
+         return (tElemento) LST_ERROR_MEMORIA;
+     }
+     else if (p==POS_NULA)
+          {
+             return (tElemento) LST_POSICION_INVALIDA;
+          }
+          else if (p->siguiente==POS_NULA)
+               {
+                   return (tElemento) LST_POSICION_INVALIDA;
+               }
+               else elem=p->siguiente->elemento;
+    return elem;
+ }
+
+/**
+ Destruye la lista L, elimininando cada una de sus posiciones. Los elementos almacenados en las posiciones son eliminados mediante la función fEliminar parametrizada.
+**/
+extern void l_destruir(tLista * l, void (*fEliminar)(tElemento))
+{
+    tPosicion pos=(struct celda*)(*l);
+    tPosicion posSiguiente;
+    while (pos!=POS_NULA)
+     {
+         posSiguiente=pos->siguiente;
+         if (posSiguiente!=POS_NULA)
+         {
+            fEliminar(pos->elemento);
+            pos->siguiente=POS_NULA;
+         }
+         free(pos);
+         pos=posSiguiente;
+     }
+    free((*l));
+}
