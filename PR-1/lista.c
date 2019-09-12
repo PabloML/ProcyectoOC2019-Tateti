@@ -1,6 +1,6 @@
 /**
  * TDA Lista.
- * @author Pablo Lencina
+ * @author Pablo Lencina, Adrian Flores
  */
 
 #include <stdio.h>
