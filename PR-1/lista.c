@@ -35,30 +35,37 @@ extern void l_insertar(tLista l, tPosicion p, tElemento e)
 {
     if (l==POS_NULA)
     {
-        return (void) LST_ERROR_MEMORIA;
+        exit(LST_ERROR_MEMORIA);
     }
     else if (l->siguiente==POS_NULA)
          {
-            l->siguiente=(tLista)malloc(sizeof(struct celda));
-            p=(struct celda*)l;
-            p->siguiente->elemento=e;
-            l=(struct celda*)p;
+            l->siguiente=(tPosicion)malloc(sizeof(struct celda));
+            l->siguiente->elemento=e;
+            l->siguiente->siguiente=POS_NULA;
          }
          else if (p==POS_NULA)
               {
-                 return (void) LST_POSICION_INVALIDA;
+                 exit(LST_POSICION_INVALIDA);
               }
-              else {
-                      tPosicion pos=l;
-                      while (pos->siguiente!=p)
-                      {
-                         pos=pos->siguiente;
-                      }
-                      tPosicion position= (tLista)malloc(sizeof(struct celda));
+              else if (l==p)
+                   {
+                      tPosicion position= (tPosicion)malloc(sizeof(struct celda));
                       position->elemento=e;
-                      position->siguiente=p;
-                      pos->siguiente=position;
+                      position->siguiente=((tPosicion)l)->siguiente;
+                      l->siguiente=position;
                    }
+                   else
+                        {
+                           tPosicion pos=l;
+                           while (pos->siguiente!=p)
+                           {
+                              pos=pos->siguiente;
+                           }
+                           tPosicion position= (tPosicion)malloc(sizeof(struct celda));
+                           position->elemento=e;
+                           position->siguiente=p;
+                           pos->siguiente=position;
+                        }
 }
 
  /**
@@ -70,26 +77,24 @@ extern void l_eliminar(tLista l, tPosicion p, void (*fEliminar)(tElemento))
  {
      if (l==POS_NULA)
      {
-         return (void) LST_ERROR_MEMORIA;
+         exit(LST_ERROR_MEMORIA);
      }
      else if (p==POS_NULA)
            {
-              return (void) LST_POSICION_INVALIDA;
+              exit(LST_POSICION_INVALIDA);
            }
      else if (p->siguiente==POS_NULA)
           {
-             return (void) LST_POSICION_INVALIDA;
+             exit(LST_POSICION_INVALIDA);
           }
           else {
-                  fEliminar(p->siguiente->elemento);
                   tPosicion pos=p->siguiente;
-                  if (p!=(struct celda*)l)
-                  {
-                      tPosicion posSiguiente=pos->siguiente;
-                      p->siguiente=posSiguiente;
-                      pos->siguiente=POS_NULA;
-                  }
+                  fEliminar(pos->elemento);
+                  tPosicion posSiguiente=pos->siguiente;
+                  p->siguiente=posSiguiente;
+                  pos->siguiente=POS_NULA;
                   pos->elemento=ELE_NULO;
+                  pos=POS_NULA;
                   free(pos);
                }
  }
@@ -137,16 +142,16 @@ extern tPosicion l_anterior(tLista l, tPosicion p)
      tPosicion pos=POS_NULA;
      if (p==POS_NULA)
      {
-         return (tPosicion) LST_POSICION_INVALIDA;
+         exit(LST_POSICION_INVALIDA);
      }
      else if (l!=POS_NULA)
           {
              if (l->siguiente==POS_NULA)
              {
-                 return (tPosicion) LST_NO_EXISTE_ANTERIOR;
+                 exit(LST_NO_EXISTE_ANTERIOR);
              }
              else {
-                    tPosicion pos=l;
+                    pos=l;
                     while (pos->siguiente!=p)
                     {
                       pos=pos->siguiente;
@@ -165,13 +170,13 @@ extern tPosicion l_siguiente(tLista l, tPosicion p)
      tPosicion pos=POS_NULA;
      if (p==POS_NULA)
      {
-         return (tPosicion) LST_POSICION_INVALIDA;
+         exit(LST_POSICION_INVALIDA);
      }
      if (l!=POS_NULA)
      {
          if (p->siguiente==POS_NULA)
          {
-             return (tPosicion) LST_NO_EXISTE_SIGUIENTE;
+             exit(LST_NO_EXISTE_SIGUIENTE);
          }
          else pos=p->siguiente;
      }
@@ -199,20 +204,22 @@ extern tPosicion l_fin(tLista l)
 **/
 extern tElemento l_recuperar(tLista l, tPosicion p)
  {
-     tElemento elem=(tElemento) LST_ELEMENTO_NULO;
+     tElemento elem=ELE_NULO;
      if (l==POS_NULA)
      {
-         return (tElemento) LST_ERROR_MEMORIA;
+         exit(LST_ERROR_MEMORIA);
      }
      else if (p==POS_NULA)
           {
-             return (tElemento) LST_POSICION_INVALIDA;
+             exit(LST_POSICION_INVALIDA);
           }
           else if (p->siguiente==POS_NULA)
                {
-                   return (tElemento) LST_POSICION_INVALIDA;
+                   exit(LST_POSICION_INVALIDA);
                }
                else elem=p->siguiente->elemento;
+    if (elem==ELE_NULO)
+        exit(LST_ELEMENTO_NULO);
     return elem;
  }
 
@@ -221,19 +228,20 @@ extern tElemento l_recuperar(tLista l, tPosicion p)
 **/
 extern void l_destruir(tLista * l, void (*fEliminar)(tElemento))
 {
-    tPosicion pos=(struct celda*)(*l);
+    tPosicion pos=(struct celda*)l;
     tPosicion posSiguiente;
     while (pos!=POS_NULA)
      {
-         posSiguiente=pos->siguiente;
-         if (posSiguiente!=POS_NULA)
+         if (pos->elemento!=ELE_NULO)
          {
-            fEliminar(pos->elemento);
-            pos->siguiente=POS_NULA;
+             fEliminar(pos->elemento);
          }
+         posSiguiente=pos->siguiente;
+         pos->siguiente=POS_NULA;
          pos->elemento=ELE_NULO;
+         pos=POS_NULA;
          free(pos);
          pos=posSiguiente;
      }
-    free((*l));
+    free(l);
 }
