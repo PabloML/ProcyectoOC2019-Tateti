@@ -56,15 +56,11 @@ extern void l_insertar(tLista l, tPosicion p, tElemento e)
                    }
                    else
                         {
-                           tPosicion pos=l;
-                           while (pos->siguiente!=p)
-                           {
-                              pos=pos->siguiente;
-                           }
                            tPosicion position= (tPosicion)malloc(sizeof(struct celda));
                            position->elemento=e;
-                           position->siguiente=p;
-                           pos->siguiente=position;
+                           tPosicion pos=p->siguiente;
+                           p->siguiente=position;
+                           position->siguiente=pos;
                         }
 }
 
@@ -239,7 +235,6 @@ extern void l_destruir(tLista * l, void (*fEliminar)(tElemento))
          posSiguiente=pos->siguiente;
          pos->siguiente=POS_NULA;
          pos->elemento=ELE_NULO;
-         pos=POS_NULA;
          free(pos);
          pos=posSiguiente;
      }

@@ -16,7 +16,7 @@ typedef struct entero
 void eliminarElemento (tElemento e)
 {
     ((tEntero)e)->entero=0;
-    free(e);
+    free((tEntero)e);
 }
 
 int main()
@@ -78,78 +78,3 @@ int main()
         printf("\nLa lista fue destruida.\n");
     return 0;
 }
-
-int pruebaLista(){
-            tLista l;
-            int opcion;
-
-
-        printf("Elija una opcion : \n");
-        printf("(1)Crear Lista: \n");
-        printf("(2)Ingrese los numeros (Termine con un 0 la secuencia): \n");
-        printf("(3)Mostrar La lista : \n");
-        printf("(4)Salir : \n");
-
-        scanf("%i",&opcion);
-
-        if(opcion==1){
-            crear_lista(&l);
-        }
-
-        printf("------------------------\n");
-        printf("Elija una opcion : \n");
-        printf("(1)Crear Lista: (hecho)\n");
-        printf("(2)Ingrese los numeros (Termine con un 0 la secuencia: \n");
-        printf("(3)Mostrar La lista : \n");
-        printf("(4)Salir : \n");
-        scanf("%i",&opcion);
-        if(opcion==2){
-
-        tEntero e=(tEntero)malloc(sizeof(struct entero));
-        tPosicion p1=l_primera(l);
-        printf("Ingrese los numeros que quiera : \n");
-        int valor;
-        scanf("%i",&valor);
-        while(valor!=0){
-            e->entero=valor;
-            l_insertar(l,p1,e);
-            p1=l_siguiente(l,l_primera(l));
-            scanf("%i",&valor);
-             e=(tEntero)malloc(sizeof(struct entero));
-        }
-        }
-        printf("------------------------\n");
-        printf("Elija una opcion : \n");
-        printf("(1)Crear Lista: (hecho)\n");
-        printf("(2)Ingrese los numeros (Termine con un 0 la secuencia): (hecho)\n");
-        printf("(3)Mostrar La lista : \n");
-        printf("(4)Salir : \n");
-        scanf("%i",&opcion);
-        if(opcion==3){
-            printf("nnnnnnnnnnnnnnnnnnnnnnnnnnn \n");
-            tPosicion pr=l_primera(l);
-            printf("nnnnnnnnnnnnnnnnnnnnnnnnnnn \n");
-            while(pr!=l_fin(l)){
-                printf("Elem : %i\n",((tEntero)l_recuperar(l,pr))->entero);
-                pr=pr->siguiente;
-                if(pr==l_ultima(l)){
-                    pr=l_fin(l);}
-                    printf("Elem : %i\n",((tEntero)l_recuperar(l,pr))->entero);
-
-        }
-        }
-
-        printf("------------------------\n");
-        printf("Elija una opcion : \n");
-        printf("(1)Crear Lista: (hecho)\n");
-        printf("(2)Ingrese los numeros (Termine con un 0 la secuencia): (hecho)\n");
-        printf("(3)Mostrar La lista : (hecho)\n");
-        printf("(4)Salir : \n");
-        scanf("%i",&opcion);
-        if(opcion==4){
-           l_destruir(&l,&eliminarElemento);
-        if (l==POS_NULA)
-            printf("\nLa lista fue destruida.\n");
-        }
-        return 1;
-    }
