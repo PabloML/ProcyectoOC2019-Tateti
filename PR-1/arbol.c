@@ -16,13 +16,22 @@
 Inicializa un �rbol vac�o.
 Una referencia al �rbol creado es referenciado en *A.
 **/
-extern void crear_arbol(tArbol * a);
- ()
+extern void crear_arbol(tArbol * a){
+    (*a)=(tArbol)malloc(malloc(struct arbol));
+    (*a)->raiz=POS_NULA;
+        
+}
+ 
 /**
 Crea la ra�z de A.
 Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
 **/
-extern void crear_raiz(tArbol a, tElemento e);
+extern void crear_raiz(tArbol a, tElemento e){
+  (*a)->raiz=(nodo)malloc(malloc(struct nodo));
+    (*a)->raiz->elemento=ELE_NULO;
+    crear_lista(a->raiz->hijos);
+    (*a)->raiz->padre=POS_NULA;
+}
 
 /**
  Inserta y retorna un nuevo nodo en A.
