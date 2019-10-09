@@ -31,10 +31,18 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="arbol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="arbol.h">
+			<Option compile="1" />
+		</Unit>
 		<Unit filename="lista.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="lista.h" />
+		<Unit filename="lista.h">
+			<Option compile="1" />
+		</Unit>
 		<Unit filename="pruebaLista.c">
 			<Option compilerVar="CC" />
 		</Unit>
