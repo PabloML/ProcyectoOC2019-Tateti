@@ -130,7 +130,9 @@ extern void a_destruir(tArbol * a, void (*fEliminar)(tElemento));
 /**
 Recupera y retorna el elemento del nodo N.
 */
-extern tElemento a_recuperar(tArbol a, tNodo n);
+extern tElemento a_recuperar(tArbol a, tNodo n){
+    return n->elemento;
+}
 
 /**
 Recupera y retorna el nodo correspondiente a la ra�z de A.
@@ -142,7 +144,9 @@ extern tNodo a_raiz(tArbol a){
 /**
  Obtiene y retorna una lista con los nodos hijos de N en A.
 **/
-extern tLista a_hijos(tArbol a, tNodo n);
+extern tLista a_hijos(tArbol a, tNodo n){
+    return n->hijos;
+}
 
 /**
  Inicializa un nuevo �rbol en *SA.
