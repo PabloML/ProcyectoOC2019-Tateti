@@ -135,7 +135,9 @@ extern tElemento a_recuperar(tArbol a, tNodo n);
 /**
 Recupera y retorna el nodo correspondiente a la ra�z de A.
 **/
-extern tNodo a_raiz(tArbol a);
+extern tNodo a_raiz(tArbol a){
+    return a->raiz;
+}
 
 /**
  Obtiene y retorna una lista con los nodos hijos de N en A.
