@@ -246,7 +246,7 @@ if(perteneceAlArbol()){
         crear_lista(sa->raiz->hijos);
         tLista l=sa->raiz->hijos;
         sa->raiz->padre=POS_NULA;
-        meterHijos();
+        meterHijos(a,sa,l_primera(a->raiz->hijos),l_primera(sa->raiz->hijos));
 
      }
 }
