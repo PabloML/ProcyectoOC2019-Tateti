@@ -11,6 +11,8 @@
 #define ARB_OPERACION_INVALIDA      10
 #define ARB_POSICION_INVALIDA       11
 #define ARB_ERROR_MEMORIA           12
+#define POS_NULA NULL
+#define ELE_NULO NULL
 
 /**
 Inicializa un �rbol vac�o.
@@ -18,7 +20,7 @@ Una referencia al �rbol creado es referenciado en *A.
 **/
 extern void crear_arbol(tArbol * a)
 {
-    (*a)=(tArbol)malloc(sezeof(struct arbol));
+    (*a)=(tArbol)malloc(sizeof(struct arbol));
     (*a)->raiz=POS_NULA;
 }
 
@@ -28,23 +30,40 @@ Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
 **/
 extern void crear_raiz(tArbol a, tElemento e)
 {
-    a->raiz=(tNodo)malloc(sizeof(struct nodo));
-    a->raiz->elemento=e;
-    tLista* l;
-    a->raiz->hijos=crear_lista(l);
-    a->raiz->padre=POS_NULA;
+    if (a!=POS_NULA)
+    {
+        exit(ARB_OPERACION_INVALIDA);
+    }
+    else {
+            a->raiz=(tNodo)malloc(sizeof(struct nodo));
+            a->raiz->elemento=e;
+            tLista l;
+            crear_lista(&l);
+            a->raiz->hijos=l;
+            a->raiz->padre=POS_NULA;
+         }
 }
 int perteneceAlArbol(tArbol a, tNodo n)
 {
-    int res=0;
+    int res=1;
     while (n!=a->raiz || n->padre!=a->raiz || n!=POS_NULA)
     {
         n=n->padre;
     }
     if (n==POS_NULA)
     {
-       res=1;
+       res=0;
     }
+    return res;
+}
+tPosicion recuperarPosicion(tLista l,tNodo n)
+{
+    tPosicion p=l_primera(l);
+    while (l_recuperar(l,p)!=n)
+    {
+        p=l_siguiente(l,p);
+    }
+    return p;
 }
 /**
  Inserta y retorna un nuevo nodo en A.
@@ -55,13 +74,13 @@ int perteneceAlArbol(tArbol a, tNodo n)
 **/
 extern tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e)
 {
-    tNodo=POS_NULA;
+    tNodo nodo=POS_NULA;
     if (a==POS_NULA)
     {
         exit(ARB_ERROR_MEMORIA);
     }
     else {
-             if (perteneceAlArbol(a,np)==1)
+             if (perteneceAlArbol(a,np)==0)
              {
                 exit(ARB_POSICION_INVALIDA);
              }
@@ -75,20 +94,22 @@ extern tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e)
                        }
                        else if (nh==POS_NULA)
                             {
-                               nodo=(tnodo)malloc(sizeof(struct nodo));
+                               nodo=(tNodo)malloc(sizeof(struct nodo));
                                nodo->elemento=e;
-                               tLista* l;
-                               nodo->hijos=crear_lista(l);
+                               tLista l;
+                               crear_lista(&l);
+                               nodo->hijos=l;
                                nodo->padre=np;
                                l_insertar(np->hijos,l_primera(np->hijos),nodo);
                             }
                             else {
-                                   nodo=(tnodo)malloc(sizeof(struct nodo));
+                                   nodo=(tNodo)malloc(sizeof(struct nodo));
                                    nodo->elemento=e;
-                                   tLista* l;
-                                   nodo->hijos=crear_lista(l);
+                                   tLista l;
+                                   crear_lista(&l);
+                                   nodo->hijos=l;
                                    nodo->padre=np;
-                                   l_insertar(np->hijos,nh,nodo);
+                                   l_insertar(np->hijos,recuperarPosicion(np->hijos,nh),nodo);
                                  }
          }
     return nodo;
@@ -108,24 +129,70 @@ extern void a_eliminar(tArbol a, tNodo pa, void (*fEliminar)(tElemento))
     }
     else if (a->raiz==pa)
          {
-           if (l_primera(pa->hijos)==l_ultima(pa->hijos))
+           tPosicion p=l_primera(pa->hijos);
+           if (p->siguiente!=POS_NULA)
            {
-               tNodo raizVieja=pa;
-               tNodo raizNueva=l_recuperar(pa->hijos,l_primera(pa->hijos));
-               raizNueva->padre=POS_NULA;
-               a->raiz=raizNueva;
-               fEliminar(raizVieja->elemento);
-               l_destruir(raizVieja->hijos);
-               free(raizVieja);
+               if (l_primera(pa->hijos)==l_ultima(pa->hijos))
+               {
+                   tNodo raizVieja=pa;
+                   tNodo raizNueva=l_recuperar(pa->hijos,l_primera(raizVieja->hijos));
+                   raizNueva->padre=POS_NULA;
+                   a->raiz=raizNueva;
+                   fEliminar(raizVieja->elemento);
+                   l_destruir(&(raizVieja->hijos),fEliminar);
+                   free(raizVieja);
+               }
+               else exit(ARB_OPERACION_INVALIDA);
            }
+           else {
+                   tNodo raizVieja=pa;
+                   a->raiz=POS_NULA;
+                   fEliminar(&(raizVieja->elemento));
+                   l_destruir(&(raizVieja->hijos),fEliminar);
+                   free(raizVieja);
+                }
          }
+         else if (perteneceAlArbol(a,pa)==0)
+              {
+                 exit(ARB_POSICION_INVALIDA);
+              }
+              else
+                   {
+                      tNodo nodoViejo=pa;
+                      tNodo nodoNuevo=l_recuperar(pa->hijos,l_primera(nodoViejo->hijos));
+                      nodoNuevo->padre=nodoViejo->padre;
+                      fEliminar(nodoViejo->elemento);
+                      l_eliminar(nodoViejo->hijos,l_primera(nodoViejo->hijos),fEliminar);
+                      tPosicion p=l_primera(nodoViejo->hijos);
+                      while (p->siguiente!=POS_NULA)
+                      {
+                         l_insertar(nodoNuevo->hijos,l_primera(nodoViejo->hijos),l_recuperar(nodoViejo->hijos,l_primera(nodoViejo->hijos)));
+                         l_eliminar(nodoViejo->hijos,l_primera(nodoViejo->hijos),fEliminar);
+                         p=l_primera(nodoViejo->hijos);
+                      }
+                      l_destruir(&(nodoViejo->hijos),fEliminar);
+                      free(nodoViejo);
+                   }
 }
 
 /**
  Destruye el �rbol A, elimininando cada uno de sus nodos.
  Los elementos almacenados en el �rbol son eliminados mediante la funci�n fEliminar parametrizada.
 **/
-extern void a_destruir(tArbol * a, void (*fEliminar)(tElemento));
+extern void a_destruir(tArbol * a, void (*fEliminar)(tElemento))
+{
+    tArbol arbol=(*a);
+    tPosicion p=l_primera(arbol->raiz->hijos);
+    while (p->siguiente==POS_NULA)
+    {
+        a_eliminar(arbol,l_recuperar(arbol->raiz->hijos,p),fEliminar);
+        p=l_primera(arbol->raiz->hijos);
+    }
+    fEliminar(arbol->raiz->elemento);
+    l_destruir(&(arbol->raiz->hijos),fEliminar);
+    free(arbol->raiz);
+    free(a);
+}
 
 /**
 Recupera y retorna el elemento del nodo N.
