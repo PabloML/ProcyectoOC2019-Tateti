@@ -223,7 +223,6 @@ extern tNodo a_raiz(tArbol a)
     {
          exit(ARB_ERROR_MEMORIA);
     }
-
     return a->raiz;
 }
 
@@ -259,17 +258,22 @@ extern void a_sub_arbol(tArbol a, tNodo n, tArbol * sa)
         {
             exit(ARB_POSICION_INVALIDA);
         }
-        else {
-                tArbol arbol=(*sa);
-                if (arbol==POS_NULA)
-                {
-                    crear_arbol(sa);
-                }
-                tPosicion p=recuperarPosicion(n->padre->hijos,n);
-                n->padre=POS_NULA;
-                arbol->raiz=n;
-                tPosicion siguiente=p->siguiente;
-                p->siguiente=siguiente->siguiente;
-                free(siguiente);
+        else if (perteneceAlArbol(a,n)==0)
+             {
+                 exit(ARB_POSICION_INVALIDA);
              }
+             else
+                 {
+                    tArbol arbol=(*sa);
+                    if (arbol==POS_NULA)
+                    {
+                        crear_arbol(sa);
+                    }
+                    tPosicion p=recuperarPosicion(n->padre->hijos,n);
+                    n->padre=POS_NULA;
+                    arbol->raiz=n;
+                    tPosicion siguiente=p->siguiente;
+                    p->siguiente=siguiente->siguiente;
+                    free(siguiente);
+                 }
 }
