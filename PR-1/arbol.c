@@ -219,7 +219,6 @@ extern tElemento a_recuperar(tArbol a, tNodo n)
     {
         exit(ARB_ERROR_MEMORIA);
     }
-
     else if (perteneceAlArbol(a,n)==0)
          {
             exit(ARB_POSICION_INVALIDA);
