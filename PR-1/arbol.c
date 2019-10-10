@@ -20,12 +20,18 @@ Una referencia al �rbol creado es referenciado en *A.
 **/
 extern void crear_arbol(tArbol * a)
 {
-    if ((*a)!=POS_NULA)
+    if (a==POS_NULA)
     {
-        exit(ARB_OPERACION_INVALIDA);
+        exit(ARB_ERROR_MEMORIA);
     }
-    (*a)=(tArbol)malloc(sizeof(struct arbol));
-    (*a)->raiz=POS_NULA;
+    else if ((*a)!=POS_NULA)
+         {
+             exit(ARB_OPERACION_INVALIDA);
+         }
+         else {
+                 (*a)=(tArbol)malloc(sizeof(struct arbol));
+                 (*a)->raiz=POS_NULA;
+              }
 }
 
 /**
@@ -34,18 +40,22 @@ Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
 **/
 extern void crear_raiz(tArbol a, tElemento e)
 {
-    if (a->raiz!=POS_NULA)
+    if (a==POS_NULA)
     {
-        exit(ARB_OPERACION_INVALIDA);
+        exit(ARB_ERROR_MEMORIA);
     }
-    else {
-            a->raiz=(tNodo)malloc(sizeof(struct nodo));
-            a->raiz->elemento=e;
-            tLista l;
-            crear_lista(&l);
-            a->raiz->hijos=l;
-            a->raiz->padre=POS_NULA;
+    else if (a->raiz!=POS_NULA)
+         {
+             exit(ARB_OPERACION_INVALIDA);
          }
+         else {
+                 a->raiz=(tNodo)malloc(sizeof(struct nodo));
+                 a->raiz->elemento=e;
+                 tLista l;
+                 crear_lista(&l);
+                 a->raiz->hijos=l;
+                 a->raiz->padre=POS_NULA;
+              }
 }
 int perteneceAlArbol(tArbol a, tNodo n)
 {
@@ -183,17 +193,20 @@ extern void a_eliminar(tArbol a, tNodo pa, void (*fEliminar)(tElemento))
 **/
 extern void a_destruir(tArbol * a, void (*fEliminar)(tElemento))
 {
-    tArbol arbol=(*a);
-    tPosicion p=l_primera(arbol->raiz->hijos);
-    while (p->siguiente==POS_NULA)
+    if (a!=POS_NULA)
     {
-        a_eliminar(arbol,l_recuperar(arbol->raiz->hijos,p),fEliminar);
-        p=l_primera(arbol->raiz->hijos);
+        tArbol arbol=(*a);
+        tPosicion p=l_primera(arbol->raiz->hijos);
+        while (p->siguiente==POS_NULA)
+        {
+           a_eliminar(arbol,l_recuperar(arbol->raiz->hijos,p),fEliminar);
+           p=l_primera(arbol->raiz->hijos);
+        }
+        fEliminar(arbol->raiz->elemento);
+        l_destruir(&(arbol->raiz->hijos),fEliminar);
+        free(arbol->raiz);
+        free(a);
     }
-    fEliminar(arbol->raiz->elemento);
-    l_destruir(&(arbol->raiz->hijos),fEliminar);
-    free(arbol->raiz);
-    free(a);
 }
 
 /**
