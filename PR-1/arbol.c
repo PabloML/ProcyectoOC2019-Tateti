@@ -237,5 +237,27 @@ extern tLista a_hijos(tArbol a, tNodo n)
 **/
 extern void a_sub_arbol(tArbol a, tNodo n, tArbol * sa)
 {
+if(perteneceAlArbol()){
+        (*sa)=(tArbol)malloc(malloc(struct arbol));
+        (*sa)->raiz=POS_NULA;
 
+        sa->raiz=(nodo)malloc(malloc(struct nodo));
+        (*sa)->raiz->elemento=n->elemento;
+        crear_lista(sa->raiz->hijos);
+        tLista l=sa->raiz->hijos;
+        sa->raiz->padre=POS_NULA;
+        meterHijos();
+
+     }
+}
+int meterHijos(tArbol a1,tArbol a2,tPosicion n1,tPosicion n2){
+    tPosicion p=l_primera(n1.hijos),aux2;
+     while(p!=null){
+        aux2=a_insertar(a2,n2,l_insertar(n2.hijos,l_ultima()),n1->elemento);
+
+        meterHijos(a1,a2,p,aux2);
+
+        p=p->siguiente;
+        
+    }
 }
