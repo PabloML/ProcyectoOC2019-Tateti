@@ -30,7 +30,7 @@ Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
 **/
 extern void crear_raiz(tArbol a, tElemento e)
 {
-    if (a!=POS_NULA)
+    if (a->raiz!=POS_NULA)
     {
         exit(ARB_OPERACION_INVALIDA);
     }
@@ -125,7 +125,7 @@ extern void a_eliminar(tArbol a, tNodo pa, void (*fEliminar)(tElemento))
 {
     if (a==POS_NULA)
     {
-        exit(ARB_POSICION_INVALIDA);
+        exit(ARB_ERROR_MEMORIA);
     }
     else if (a->raiz==pa)
          {
