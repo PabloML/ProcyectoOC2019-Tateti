@@ -20,6 +20,10 @@ Una referencia al �rbol creado es referenciado en *A.
 **/
 extern void crear_arbol(tArbol * a)
 {
+    if ((*a)!=POS_NULA)
+    {
+        exit(ARB_OPERACION_INVALIDA);
+    }
     (*a)=(tArbol)malloc(sizeof(struct arbol));
     (*a)->raiz=POS_NULA;
 }
@@ -79,39 +83,37 @@ extern tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e)
     {
         exit(ARB_ERROR_MEMORIA);
     }
-    else {
-             if (perteneceAlArbol(a,np)==0)
-             {
-                exit(ARB_POSICION_INVALIDA);
-             }
-             else if (np==POS_NULA)
-                  {
-                     exit(ARB_POSICION_INVALIDA);
-                  }
-                  else if (nh->padre!=np)
-                       {
-                          exit(ARB_POSICION_INVALIDA);
-                       }
-                       else if (nh==POS_NULA)
-                            {
-                               nodo=(tNodo)malloc(sizeof(struct nodo));
-                               nodo->elemento=e;
-                               tLista l;
-                               crear_lista(&l);
-                               nodo->hijos=l;
-                               nodo->padre=np;
-                               l_insertar(np->hijos,l_primera(np->hijos),nodo);
-                            }
-                            else {
-                                   nodo=(tNodo)malloc(sizeof(struct nodo));
-                                   nodo->elemento=e;
-                                   tLista l;
-                                   crear_lista(&l);
-                                   nodo->hijos=l;
-                                   nodo->padre=np;
-                                   l_insertar(np->hijos,recuperarPosicion(np->hijos,nh),nodo);
-                                 }
-         }
+    else if (perteneceAlArbol(a,np)==0)
+            {
+               exit(ARB_POSICION_INVALIDA);
+            }
+         else if (np==POS_NULA)
+              {
+                 exit(ARB_POSICION_INVALIDA);
+              }
+              else if (nh->padre!=np)
+                   {
+                      exit(ARB_POSICION_INVALIDA);
+                   }
+                   else if (nh==POS_NULA)
+                        {
+                            nodo=(tNodo)malloc(sizeof(struct nodo));
+                            nodo->elemento=e;
+                            tLista l;
+                            crear_lista(&l);
+                            nodo->hijos=l;
+                            nodo->padre=np;
+                            l_insertar(np->hijos,l_primera(np->hijos),nodo);
+                         }
+                         else {
+                                nodo=(tNodo)malloc(sizeof(struct nodo));
+                                nodo->elemento=e;
+                                tLista l;
+                                crear_lista(&l);
+                                nodo->hijos=l;
+                                nodo->padre=np;
+                                l_insertar(np->hijos,recuperarPosicion(np->hijos,nh),nodo);
+                              }
     return nodo;
 }
 
@@ -201,9 +203,14 @@ extern tElemento a_recuperar(tArbol a, tNodo n)
 {
     tElemento e=n->elemento;
     if (a==POS_NULA)
+    {
         exit(ARB_ERROR_MEMORIA);
+    }
+
     else if (perteneceAlArbol(a,n)==0)
-             exit(ARB_POSICION_INVALIDA);
+         {
+            exit(ARB_POSICION_INVALIDA);
+         }
     return e;
 }
 
@@ -224,9 +231,13 @@ extern tLista a_hijos(tArbol a, tNodo n)
 {
     tLista l=n->hijos;
     if (a==POS_NULA)
-        exit(ARB_ERROR_MEMORIA);
+    {
+       exit(ARB_ERROR_MEMORIA);
+    }
     else if (perteneceAlArbol(a,n)==0)
+         {
             exit(ARB_POSICION_INVALIDA);
+         }
     return l;
 }
 
@@ -237,27 +248,25 @@ extern tLista a_hijos(tArbol a, tNodo n)
 **/
 extern void a_sub_arbol(tArbol a, tNodo n, tArbol * sa)
 {
-if(perteneceAlArbol()){
-        (*sa)=(tArbol)malloc(malloc(struct arbol));
-        (*sa)->raiz=POS_NULA;
-
-        sa->raiz=(nodo)malloc(malloc(struct nodo));
-        (*sa)->raiz->elemento=n->elemento;
-        crear_lista(sa->raiz->hijos);
-        tLista l=sa->raiz->hijos;
-        sa->raiz->padre=POS_NULA;
-        meterHijos();
-
-     }
-}
-int meterHijos(tArbol a1,tArbol a2,tPosicion n1,tPosicion n2){
-    tPosicion p=l_primera(n1.hijos),aux2;
-     while(p!=null){
-        aux2=a_insertar(a2,n2,l_insertar(n2.hijos,l_ultima()),n1->elemento);
-
-        meterHijos(a1,a2,p,aux2);
-
-        p=p->siguiente;
-        
-    }
+   if (a==POS_NULA)
+   {
+       exit(ARB_ERROR_MEMORIA);
+   }
+   else if (n==POS_NULA)
+        {
+            exit(ARB_POSICION_INVALIDA);
+        }
+        else {
+                tArbol arbol=(*sa);
+                if (arbol==POS_NULA)
+                {
+                    crear_arbol(sa);
+                }
+                tPosicion p=recuperarPosicion(n->padre->hijos,n);
+                n->padre=POS_NULA;
+                arbol->raiz=n;
+                tPosicion siguiente=p->siguiente;
+                p->siguiente=siguiente->siguiente;
+                free(siguiente);
+             }
 }
