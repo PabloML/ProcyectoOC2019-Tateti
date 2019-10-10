@@ -287,6 +287,7 @@ extern void a_sub_arbol(tArbol a, tNodo n, tArbol * sa)
                     tPosicion siguiente=p->siguiente;
                     p->siguiente=siguiente->siguiente;
                     siguiente->siguiente=POS_NULA;
+                    siguiente->elemento=POS_NULA;
                     free(siguiente);
                  }
 }
