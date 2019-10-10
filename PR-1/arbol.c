@@ -220,7 +220,10 @@ Recupera y retorna el nodo correspondiente a la ra�z de A.
 extern tNodo a_raiz(tArbol a)
 {
     if (a==POS_NULA)
-       exit(ARB_ERROR_MEMORIA);
+    {
+         exit(ARB_ERROR_MEMORIA);
+    }
+
     return a->raiz;
 }
 
@@ -248,7 +251,7 @@ extern tLista a_hijos(tArbol a, tNodo n)
 **/
 extern void a_sub_arbol(tArbol a, tNodo n, tArbol * sa)
 {
-   if (a==POS_NULA)
+  if (a==POS_NULA)
    {
        exit(ARB_ERROR_MEMORIA);
    }
