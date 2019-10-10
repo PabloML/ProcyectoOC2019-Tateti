@@ -200,8 +200,10 @@ Recupera y retorna el elemento del nodo N.
 extern tElemento a_recuperar(tArbol a, tNodo n)
 {
     tElemento e=n->elemento;
-    if (perteneceAlArbol(a,n)==0)
-        exit(ARB_POSICION_INVALIDA);
+    if (a==POS_NULA)
+        exit(ARB_ERROR_MEMORIA);
+    else if (perteneceAlArbol(a,n)==0)
+             exit(ARB_POSICION_INVALIDA);
     return e;
 }
 
@@ -210,6 +212,8 @@ Recupera y retorna el nodo correspondiente a la ra�z de A.
 **/
 extern tNodo a_raiz(tArbol a)
 {
+    if (a==POS_NULA)
+       exit(ARB_ERROR_MEMORIA);
     return a->raiz;
 }
 
@@ -219,8 +223,10 @@ extern tNodo a_raiz(tArbol a)
 extern tLista a_hijos(tArbol a, tNodo n)
 {
     tLista l=n->hijos;
-    if (perteneceAlArbol(a,n)==0)
-       exit(ARB_POSICION_INVALIDA);
+    if (a==POS_NULA)
+        exit(ARB_ERROR_MEMORIA);
+    else if (perteneceAlArbol(a,n)==0)
+            exit(ARB_POSICION_INVALIDA);
     return l;
 }
 
@@ -229,4 +235,7 @@ extern tLista a_hijos(tArbol a, tNodo n)
  El nuevo �rbol en *SA se compone de los nodos del sub�rbol de A a partir de N.
  El subarbol de A a partir de N debe ser eliminado de A.
 **/
-extern void a_sub_arbol(tArbol a, tNodo n, tArbol * sa);
+extern void a_sub_arbol(tArbol a, tNodo n, tArbol * sa)
+{
+
+}
