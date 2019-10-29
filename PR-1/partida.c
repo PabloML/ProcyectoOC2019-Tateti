@@ -31,7 +31,7 @@ void limpiarConsola();
 /**
 Inicializa una nueva partida, indicando:
  - Modo de partida (Usuario vs. Usuario o Usuario vs. Agente IA).
- - Jugador que comienza la partida (Jugador 1, Jugador 2, o elección al azar).
+ - Jugador que comienza la partida (Jugador 1, Jugador 2, o elecciÃ³n al azar).
  - Nombre que representa al Jugador 1.
  - Nombre que representa al Jugador 2.
 **/
@@ -41,46 +41,60 @@ extern void nueva_partida(tPartida * p, int modo_partida, int comienza, char * j
     (*p)->estado=PART_EN_JUEGO;
     (*p)->turno_de=comienza;
      (*p)->tablero=(tTablero)malloc(sizeof(struct tablero));
-     (*p)->nombre_jugador_1=j1_nombre;
-     p->nombre_jugador_2=j2_nombre;
-
+     for(int k=0;k<=2;k++)
+        for(int h=0;h<=2;h++)
+            (*p)->tablero->grilla[k][h]=0;
+     for(int i=0;i<50;i++)
+         j1_nombre[i]=*(j1_nombre+i);
+     for(int j=0;j<50;j++)
+         j2_nombre[j]=*(j2_nombre+j);
 }
 /**
-Actualiza, si corresponde, el estado de la partida considerando que el jugador al que le corresponde jugar, decide hacerlo en la posición indicada (X,Y).
-En caso de que el movimiento a dicha posición sea posible, retorna PART_MOVIMIENTO_OK; en caso contrario, retorna PART_MOVIMIENTO_ERROR.
-Las posiciones (X,Y) deben corresponderse al rango [0-2]; X representa el número de fila, mientras Y el número de columna.
+Actualiza, si corresponde, el estado de la partida considerando que el jugador al que le corresponde jugar, decide hacerlo en la posiciÃ³n indicada (X,Y).
+En caso de que el movimiento a dicha posiciÃ³n sea posible, retorna PART_MOVIMIENTO_OK; en caso contrario, retorna PART_MOVIMIENTO_ERROR.
+Las posiciones (X,Y) deben corresponderse al rango [0-2]; X representa el nÃºmero de fila, mientras Y el nÃºmero de columna.
 **/
 extern int nuevo_movimiento(tPartida p, int mov_x, int mov_y){
     limpiarConsola();
-    if((x>=0 && x<=2)&&(y>=0 && y<=2)){
+    if((mov_x>=0 && mov_x<=2)&&(mov_y>=0 && mov_y<=2)){
 
        for(int i=0;i<=2;i++)
           for(int j=0;j<=2;j++)
               if(i==mov_x && j==mov_y){
                 p->tablero->grilla[i][j]=p->turno_de;
                 if(p->turno_de == 100)
-                    printf("X");
+                    printf(" X ");
                 else
-                    printf("O");
+                    printf(" O ");
               }
               else
                 if(p->tablero->grilla[i][j]==100)
-                     printf("X");
+                     printf(" X ");
                 else
-                     printf("O");
-
+                    if(p->tablero->grilla[i][j]==101)
+                        printf(" O ");
+                    else
+                        printf("   ");
        exit(PART_MOVIMIENTO_OK);
     }
     else{
         exit(PART_MOVIMIENTO_ERROR);
     }
 }
-
 /**
 Finaliza la partida referenciada por P, liberando toda la memoria utilizada.
 **/
-extern void finalizar_partida(tPartida * p);
-
+extern void finalizar_partida(tPartida * p){
+   tPartida partida=(*p);
+    free(partida->estado);
+    free(partida->modo_partida);
+    free(partida->nombre_jugador_1);
+    free(partida->nombre_jugador_2);
+    free(partida->tablero->grilla);
+    free(partida->tablero);
+    free(partida->turno_de);
+    free(p);
+}
 void limpiarConsola(){
     printf("\n");
     printf("\n");
