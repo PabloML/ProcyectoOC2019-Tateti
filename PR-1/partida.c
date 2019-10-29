@@ -26,7 +26,6 @@
 
 #define PART_ERROR_MEMORIA                  113
 
-void limpiarConsola();
 
 /**
 Inicializa una nueva partida, indicando:
@@ -55,26 +54,28 @@ En caso de que el movimiento a dicha posición sea posible, retorna PART_MOVIMIE
 Las posiciones (X,Y) deben corresponderse al rango [0-2]; X representa el número de fila, mientras Y el número de columna.
 **/
 extern int nuevo_movimiento(tPartida p, int mov_x, int mov_y){
-    limpiarConsola();
     if((mov_x>=0 && mov_x<=2)&&(mov_y>=0 && mov_y<=2)){
 
-       for(int i=0;i<=2;i++)
+       for(int i=0;i<=2;i++){
           for(int j=0;j<=2;j++)
               if(i==mov_x && j==mov_y){
                 p->tablero->grilla[i][j]=p->turno_de;
                 if(p->turno_de == 100)
-                    printf(" X ");
+                    printf(" X |");
                 else
-                    printf(" O ");
+                    printf(" O |");
               }
               else
                 if(p->tablero->grilla[i][j]==100)
-                     printf(" X ");
+                     printf(" X |");
                 else
                     if(p->tablero->grilla[i][j]==101)
-                        printf(" O ");
+                        printf(" O |");
                     else
-                        printf("   ");
+                        printf("   |");
+           if(i!=2)
+                printf("\n --------- \n");
+       }
        exit(PART_MOVIMIENTO_OK);
     }
     else{
@@ -94,7 +95,4 @@ extern void finalizar_partida(tPartida * p){
     free(partida->tablero);
     free(partida->turno_de);
     free(p);
-}
-void limpiarConsola(){
-    system("cls");
 }
