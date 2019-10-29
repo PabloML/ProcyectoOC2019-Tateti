@@ -96,29 +96,5 @@ extern void finalizar_partida(tPartida * p){
     free(p);
 }
 void limpiarConsola(){
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
-    printf("\n");
+    system("cls");
 }
