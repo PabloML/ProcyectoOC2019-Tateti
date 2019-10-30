@@ -22,8 +22,12 @@
 extern void crear_lista(tLista * l)
  {
      (*l)=(tLista)malloc(sizeof(struct celda));
-     (*l)->elemento=ELE_NULO;
-     (*l)->siguiente=POS_NULA;
+     if ((*l)!=POS_NULA)
+     {
+        (*l)->elemento=ELE_NULO;
+        (*l)->siguiente=POS_NULA;
+     }
+     else exit(LST_ERROR_MEMORIA);
  }
 
 /**
@@ -40,8 +44,12 @@ extern void l_insertar(tLista l, tPosicion p, tElemento e)
     else if (l->siguiente==POS_NULA)
          {
             l->siguiente=(tPosicion)malloc(sizeof(struct celda));
-            l->siguiente->elemento=e;
-            l->siguiente->siguiente=POS_NULA;
+            if (l->siguiente!=POS_NULA)
+            {
+                l->siguiente->elemento=e;
+                l->siguiente->siguiente=POS_NULA;
+            }
+            else exit(LST_ERROR_MEMORIA);
          }
          else if (p==POS_NULA)
               {
@@ -50,17 +58,25 @@ extern void l_insertar(tLista l, tPosicion p, tElemento e)
               else if (l==p)
                    {
                       tPosicion position= (tPosicion)malloc(sizeof(struct celda));
-                      position->elemento=e;
-                      position->siguiente=((tPosicion)l)->siguiente;
-                      l->siguiente=position;
+                      if (position!=POS_NULA)
+                      {
+                         position->elemento=e;
+                         position->siguiente=((tPosicion)l)->siguiente;
+                         l->siguiente=position;
+                      }
+                      else exit(LST_ERROR_MEMORIA);
                    }
                    else
                         {
                            tPosicion position= (tPosicion)malloc(sizeof(struct celda));
-                           position->elemento=e;
-                           tPosicion pos=p->siguiente;
-                           p->siguiente=position;
-                           position->siguiente=pos;
+                           if (position!=POS_NULA)
+                           {
+                               position->elemento=e;
+                               tPosicion pos=p->siguiente;
+                               p->siguiente=position;
+                               position->siguiente=pos;
+                           }
+                           else exit(LST_ERROR_MEMORIA);
                         }
 }
 
