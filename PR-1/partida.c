@@ -37,16 +37,16 @@ Inicializa una nueva partida, indicando:
 extern void nueva_partida(tPartida * p, int modo_partida, int comienza, char * j1_nombre, char * j2_nombre){
     (*p)=(tPartida)malloc(sizeof(struct partida));
     (*p)->modo_partida=modo_partida;
-    (*p)->estado=PART_EN_JUEGO;
+    (*p)->estado=111;
     (*p)->turno_de=comienza;
      (*p)->tablero=(tTablero)malloc(sizeof(struct tablero));
      for(int k=0;k<=2;k++)
         for(int h=0;h<=2;h++)
             (*p)->tablero->grilla[k][h]=0;
      for(int i=0;i<50;i++)
-         j1_nombre[i]=*(j1_nombre+i);
+       (*p)->nombre_jugador_1[i]=*(j1_nombre+i);
      for(int j=0;j<50;j++)
-         j2_nombre[j]=*(j2_nombre+j);
+       (*p)->nombre_jugador_2[j]=*(j2_nombre+j);
 }
 /**
 Actualiza, si corresponde, el estado de la partida considerando que el jugador al que le corresponde jugar, decide hacerlo en la posición indicada (X,Y).
@@ -54,9 +54,9 @@ En caso de que el movimiento a dicha posición sea posible, retorna PART_MOVIMIE
 Las posiciones (X,Y) deben corresponderse al rango [0-2]; X representa el número de fila, mientras Y el número de columna.
 **/
 extern int nuevo_movimiento(tPartida p, int mov_x, int mov_y){
-    if((mov_x>=0 && mov_x<=2)&&(mov_y>=0 && mov_y<=2)){
 
-       for(int i=0;i<=2;i++){
+    if((mov_x>=0 && mov_x<=2)&&(mov_y>=0 && mov_y<=2)){
+        for(int i=0;i<=2;i++){
           for(int j=0;j<=2;j++)
               if(i==mov_x && j==mov_y){
                 p->tablero->grilla[i][j]=p->turno_de;
@@ -76,10 +76,18 @@ extern int nuevo_movimiento(tPartida p, int mov_x, int mov_y){
            if(i!=2)
                 printf("\n --------- \n");
        }
-       exit(PART_MOVIMIENTO_OK);
+        printf("\n");
+       (PART_MOVIMIENTO_OK);
+     if(p->turno_de==100)
+        p->turno_de=101;
+     else
+        p->turno_de=100;
+
+    return (PART_MOVIMIENTO_OK);
     }
     else{
-        exit(PART_MOVIMIENTO_ERROR);
+        return (PART_MOVIMIENTO_ERROR);
+
     }
 }
 /**
@@ -96,3 +104,4 @@ extern void finalizar_partida(tPartida * p){
     free(partida->turno_de);
     free(p);
 }
+
