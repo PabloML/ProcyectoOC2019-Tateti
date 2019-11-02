@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lista.h"
-
+#include "arbol.h"
 #define POS_NULA NULL
 int pruebaLista();
 typedef struct entero
@@ -21,7 +21,7 @@ void eliminarElemento (tElemento e)
 
 int main()
 {
-    tLista l;
+    /*tLista l;
     crear_lista(&l);
     printf("Ingrese los numeros que quiera terminando la serie con 0 : \n");
     tEntero e=(tEntero)malloc(sizeof(struct entero));
@@ -75,6 +75,13 @@ int main()
     printf("\nDestruyo la lista.\n");
     l_destruir(&l,&eliminarElemento);
     if (l==POS_NULA)
-        printf("\nLa lista fue destruida.\n");
+        printf("\nLa lista fue destruida.\n");*/
+    tArbol a;
+    crear_arbol(&a);
+    tEntero e=(tEntero)malloc(sizeof(struct entero));
+    e->entero=1;
+    crear_raiz(a,e);
+    tEntero entero=a_recuperar(a,a_raiz(a));
+    printf("La raiz es: %i",entero->entero);
     return 0;
 }

@@ -24,18 +24,14 @@ extern void crear_arbol(tArbol * a)
     {
         exit(ARB_ERROR_MEMORIA);
     }
-    else if ((*a)!=POS_NULA)
-         {
-             exit(ARB_OPERACION_INVALIDA);
+    else {
+            (*a)=(tArbol)malloc(sizeof(struct arbol));
+             if ((*a)!=POS_NULA)
+             {
+                (*a)->raiz=POS_NULA;
+             }
+             else exit(ARB_ERROR_MEMORIA);
          }
-         else {
-                 (*a)=(tArbol)malloc(sizeof(struct arbol));
-                 if ((*a)!=POS_NULA)
-                 {
-                     (*a)->raiz=POS_NULA;
-                 }
-                 else exit(ARB_ERROR_MEMORIA);
-              }
 }
 
 /**
@@ -68,9 +64,10 @@ extern void crear_raiz(tArbol a, tElemento e)
 int perteneceAlArbol(tArbol a, tNodo n)
 {
     int res=1;
-    while (n!=a->raiz || n->padre!=a->raiz || n!=POS_NULA)
+    while (n!=(a->raiz) && (n->padre)!=a->raiz && n!=POS_NULA)
     {
-        n=n->padre;
+       n=n->padre;
+       printf("Sofia");
     }
     if (n==POS_NULA)
     {
