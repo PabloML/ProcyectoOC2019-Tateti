@@ -8,7 +8,9 @@
 
 
 #define POS_NULA NULL
+
 int pruebaLista();
+void limpiarConsola();
 typedef struct entero
 {
     int entero;
@@ -25,13 +27,24 @@ void eliminarElemento (tElemento e)
 }
 
 int main(){
-    char *nombre1;
-    char *nombre2;
+    char nombre1[50];
+    char nombre2[50];
 
     printf("Ingrese nombre de Jugador 1 \n");
-    scanf("%s",&nombre1);
+    int i=0;
+    scanf("%c",&nombre1[i]);
+    while(nombre1[i]!='\n'){
+        i++;
+        scanf("%c",&nombre1[i]);
+    }
     printf("Ingrese nombre de Jugador 2 \n");
-    scanf("%s",&nombre2);
+     i=0;
+    scanf("%c",&nombre2[i]);
+    while(nombre2[i]!='\n'){
+        i++;
+        scanf("%c",&nombre2[i]);
+    }
+
 
     limpiarConsola();
 
@@ -39,8 +52,15 @@ int main(){
     printf("Eliga modo de juego : \n");
     printf("(1)_USUARIO VS USUARIO \n");
     printf("(2)_USUARIO VS COMPUTADORA \n");
+    printf("(3)_COMPUTADORA VS COMPUTADORA \n");
     scanf("%i",&modo);
-
+    if(modo==1)
+        modo=103;
+    else
+        if(modo==2)
+            modo=104;
+        else
+            modo=105;
     limpiarConsola();
 
     int comienza;
@@ -52,21 +72,36 @@ int main(){
     scanf("%i",&comienza);
     if(comienza==3)
       comienza=(rand()%(2-1+1))+1;
-
+    if(comienza==1)
+        comienza=100;
+    else
+        comienza=101;
     limpiarConsola();
 
     tPartida partida;
     nueva_partida(&partida,modo,comienza,nombre1,nombre2);
+    printf("partida creada");
+    int x,y;
 
-    nuevo_movimiento(partida,0,0);
+    while(partida->estado==111){
+       if(partida->turno_de==100)
+            printf("Turno de Jugador 1: %s\n",partida->nombre_jugador_1);
+        else
+            printf("Turno de Jugador 2: %s\n",partida->nombre_jugador_2);
+      if(partida->modo_partida==103){
+        printf("Ingrese coordenadas para colocar: (fila columna) \n");
+        scanf("%i",&x);
+        scanf("%i",&y);
+        nuevo_movimiento(partida,x,y);
 
+      }
 
-
-
-
+      system("pause");
+      limpiarConsola();
+    }
 
 
 }
-void limpiarConsola(){
+ void limpiarConsola(){
     system("cls");
 }
