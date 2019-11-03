@@ -64,7 +64,7 @@ extern void crear_raiz(tArbol a, tElemento e)
 int perteneceAlArbol(tArbol a, tNodo n)
 {
     int res=1;
-    while (n!=(a->raiz) && (n->padre)!=a->raiz && n!=POS_NULA)
+    while (n!=(a->raiz) && (n->padre)!=a->raiz && n->padre!=POS_NULA && n!=POS_NULA)
     {
        n=n->padre;
     }
@@ -176,13 +176,12 @@ extern void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
                    free(raizVieja);
                 }
          }
-         else if (perteneceAlArbol(a,n)==0)
-              {
+         else  if (perteneceAlArbol(a,n)==0)
+               {
+
                  exit(ARB_POSICION_INVALIDA);
-              }
-              else
-                   {
-                      tNodo nodoViejo=n;
+               }
+               else { tNodo nodoViejo=n;
                       if (l_primera(nodoViejo->hijos)->siguiente!=POS_NULA)
                       {
                           tNodo nodoNuevo=l_recuperar(nodoViejo->hijos,l_primera(nodoViejo->hijos));
@@ -212,7 +211,7 @@ extern void a_destruir(tArbol * a, void (*fEliminar)(tElemento))
     {
         tArbol arbol=(*a);
         tPosicion p=l_primera(arbol->raiz->hijos);
-        while (p->siguiente!=POS_NULA)
+        while (p!=POS_NULA && p->siguiente!=POS_NULA)
         {
            a_eliminar(arbol,l_recuperar(arbol->raiz->hijos,p),fEliminar);
            p=l_primera(arbol->raiz->hijos);
