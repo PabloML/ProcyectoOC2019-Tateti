@@ -67,7 +67,6 @@ int perteneceAlArbol(tArbol a, tNodo n)
     while (n!=(a->raiz) && (n->padre)!=a->raiz && n!=POS_NULA)
     {
        n=n->padre;
-       printf("Sofia");
     }
     if (n==POS_NULA)
     {
@@ -106,25 +105,25 @@ extern tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e)
               {
                  exit(ARB_POSICION_INVALIDA);
               }
-              else if (nh->padre!=np)
+              else if (nh==POS_NULA)
                    {
-                      exit(ARB_POSICION_INVALIDA);
+                       nodo=(tNodo)malloc(sizeof(struct nodo));
+                       if (nodo!=POS_NULA)
+                       {
+                           nodo->elemento=e;
+                           tLista l;
+                           crear_lista(&l);
+                           nodo->hijos=l;
+                           nodo->padre=np;
+                           l_insertar(np->hijos,l_primera(np->hijos),nodo);
+                        }
+                        else exit(ARB_ERROR_MEMORIA);
                    }
-                   else if (nh==POS_NULA)
+                   else if (nh->padre!=np)
                         {
-                            nodo=(tNodo)malloc(sizeof(struct nodo));
-                            if (nodo!=POS_NULA)
-                            {
-                               nodo->elemento=e;
-                               tLista l;
-                               crear_lista(&l);
-                               nodo->hijos=l;
-                               nodo->padre=np;
-                               l_insertar(np->hijos,l_primera(np->hijos),nodo);
-                            }
-                            else exit(ARB_ERROR_MEMORIA);
-                         }
-                         else {
+                            exit(ARB_POSICION_INVALIDA);
+                        }
+                        else {
                                 nodo=(tNodo)malloc(sizeof(struct nodo));
                                 if (nodo!=POS_NULA)
                                 {
@@ -184,7 +183,7 @@ extern void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
               else
                    {
                       tNodo nodoViejo=n;
-                      tNodo nodoNuevo=l_recuperar(n->hijos,l_primera(nodoViejo->hijos));
+                      tNodo nodoNuevo=l_recuperar(n->hijos,l_primera(n->hijos));
                       nodoNuevo->padre=nodoViejo->padre;
                       fEliminar(nodoViejo->elemento);
                       l_eliminar(nodoViejo->hijos,l_primera(nodoViejo->hijos),fEliminar);
@@ -210,14 +209,15 @@ extern void a_destruir(tArbol * a, void (*fEliminar)(tElemento))
     {
         tArbol arbol=(*a);
         tPosicion p=l_primera(arbol->raiz->hijos);
-        while (p->siguiente==POS_NULA)
+        while (p->siguiente!=POS_NULA)
         {
            a_eliminar(arbol,l_recuperar(arbol->raiz->hijos,p),fEliminar);
            p=l_primera(arbol->raiz->hijos);
         }
-        fEliminar(arbol->raiz->elemento);
+        (*fEliminar)(arbol->raiz->elemento);
         l_destruir(&(arbol->raiz->hijos),fEliminar);
         free(arbol->raiz);
+        free(arbol);
         free(a);
     }
 }
