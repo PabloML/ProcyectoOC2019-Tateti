@@ -183,16 +183,19 @@ extern void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
               else
                    {
                       tNodo nodoViejo=n;
-                      tNodo nodoNuevo=l_recuperar(n->hijos,l_primera(n->hijos));
-                      nodoNuevo->padre=nodoViejo->padre;
-                      fEliminar(nodoViejo->elemento);
-                      l_eliminar(nodoViejo->hijos,l_primera(nodoViejo->hijos),fEliminar);
-                      tPosicion p=l_primera(nodoViejo->hijos);
-                      while (p->siguiente!=POS_NULA)
+                      if (l_primera(nodoViejo->hijos)->siguiente!=POS_NULA)
                       {
-                         l_insertar(nodoNuevo->hijos,l_primera(nodoViejo->hijos),l_recuperar(nodoViejo->hijos,l_primera(nodoViejo->hijos)));
-                         l_eliminar(nodoViejo->hijos,l_primera(nodoViejo->hijos),fEliminar);
-                         p=l_primera(nodoViejo->hijos);
+                          tNodo nodoNuevo=l_recuperar(nodoViejo->hijos,l_primera(nodoViejo->hijos));
+                          nodoNuevo->padre=nodoViejo->padre;
+                          fEliminar(nodoViejo->elemento);
+                          l_eliminar(nodoViejo->hijos,l_primera(nodoViejo->hijos),fEliminar);
+                          tPosicion p=l_primera(nodoViejo->hijos);
+                          while (p->siguiente!=POS_NULA)
+                          {
+                             l_insertar(nodoNuevo->hijos,l_primera(nodoViejo->hijos),l_recuperar(nodoViejo->hijos,l_primera(nodoViejo->hijos)));
+                             l_eliminar(nodoViejo->hijos,l_primera(nodoViejo->hijos),fEliminar);
+                             p=l_primera(nodoViejo->hijos);
+                          }
                       }
                       l_destruir(&(nodoViejo->hijos),fEliminar);
                       free(nodoViejo);
