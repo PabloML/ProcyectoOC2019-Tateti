@@ -11,20 +11,14 @@ static int valor_utilidad(tEstado e, int jugador_max);
 static tLista estados_sucesores(tEstado e, int ficha_jugador);
 static void diferencia_estados(tEstado anterior, tEstado nuevo, int * x, int * y);
 static tEstado clonar_estado(tEstado e);
-/**
-Funcion para utilizar en funcion eliminar de arbol o lista, pero que en realidad no modifica ni libera el espacio en memoria del elemento(estado)
-**/
+
 void noEliminaEstado(void *e){    }
-/**
-Funcion para utilizar en funcion eliminar de arbol o lista, liberando el espacio en memoria del elemento(estado)
-**/
+
 void eliminarEstado(void *e){
     tEstado estado= (tEstado) e;
     free(estado);
 }
-/**
-Devuelve el valor maximo del numero mas grande entre num1 y num2
-**/
+
 int max(int num1, int num2) {
    int result;
    if (num1 > num2)
@@ -34,9 +28,7 @@ int max(int num1, int num2) {
    return result;
 }
 
-/**
-Devuelve el valor minimo del numero mas grande entre num1 y num2
-**/
+
 int min(int num1, int num2) {
    int result;
    if (num1 > num2)
