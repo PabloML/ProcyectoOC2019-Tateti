@@ -26,6 +26,7 @@
 
 #define PART_ERROR_MEMORIA                  113
 
+void controlGanador(tPartida p,int turno_De);
 
 /**
 Inicializa una nueva partida, indicando:
@@ -54,41 +55,44 @@ En caso de que el movimiento a dicha posición sea posible, retorna PART_MOVIMIE
 Las posiciones (X,Y) deben corresponderse al rango [0-2]; X representa el número de fila, mientras Y el número de columna.
 **/
 extern int nuevo_movimiento(tPartida p, int mov_x, int mov_y){
-
-    if((mov_x>=0 && mov_x<=2)&&(mov_y>=0 && mov_y<=2)){
+    int valido=0;
         for(int i=0;i<=2;i++){
-          for(int j=0;j<=2;j++)
-              if(i==mov_x && j==mov_y){
-                p->tablero->grilla[i][j]=p->turno_de;
-                if(p->turno_de == 100)
-                    printf(" X |");
-                else
-                    printf(" O |");
-              }
-              else
-                if(p->tablero->grilla[i][j]==100)
-                     printf(" X |");
-                else
-                    if(p->tablero->grilla[i][j]==101)
-                        printf(" O |");
+            for(int j=0;j<=2;j++)
+                if(i==mov_x && j==mov_y && (p->tablero->grilla[i][j]==0)){
+                    valido=1;
+                    p->tablero->grilla[i][j]=p->turno_de;
+                    if(p->turno_de == 100)
+                        printf(" X |");
                     else
-                        printf("   |");
+                        printf(" O |");
+                }
+                else{
+                    if(p->tablero->grilla[i][j]==100)
+                        printf(" X |");
+                    else
+                        if(p->tablero->grilla[i][j]==101)
+                            printf(" O |");
+                        else
+                            printf("   |");
+                }
            if(i!=2)
                 printf("\n --------- \n");
-       }
+        }
         printf("\n");
-       (PART_MOVIMIENTO_OK);
-     if(p->turno_de==100)
-        p->turno_de=101;
-     else
-        p->turno_de=100;
 
-    return (PART_MOVIMIENTO_OK);
+
+    if(valido==1){
+        controlGanador(p,p->turno_de);
+        if(p->turno_de==100)
+            p->turno_de=101;
+        else
+            p->turno_de=100;
+
+        return (PART_MOVIMIENTO_OK);
     }
-    else{
+    else
         return (PART_MOVIMIENTO_ERROR);
 
-    }
 }
 /**
 Finaliza la partida referenciada por P, liberando toda la memoria utilizada.
@@ -105,3 +109,29 @@ extern void finalizar_partida(tPartida * p){
     free(p);
 }
 
+void controlGanador(tPartida p,int turno_De){
+ int hayGanador=0;
+ if((p->tablero->grilla[0][0]==turno_De)&&(p->tablero->grilla[0][1]==turno_De)&&(turno_De==p->tablero->grilla[0][2]))
+    hayGanador=1;
+ else
+    if((p->tablero->grilla[0][2]==turno_De)&&(turno_De==p->tablero->grilla[1][2])&&(turno_De==p->tablero->grilla[2][2]))
+            hayGanador=1;
+    else
+        if((p->tablero->grilla[2][2]==turno_De)&&(p->tablero->grilla[2][1]==turno_De)&&(p->tablero->grilla[2][0]==turno_De))
+            hayGanador=1;
+        else
+            if((p->tablero->grilla[2][0]==turno_De)&&(p->tablero->grilla[1][0]==turno_De)&&(p->tablero->grilla[0][0]==turno_De))
+                hayGanador=1;
+            else
+                if((p->tablero->grilla[0][0]==turno_De)&&(p->tablero->grilla[1][1]==turno_De)&&(p->tablero->grilla[2][2]==turno_De))
+                    hayGanador=1;
+                else
+                    if((p->tablero->grilla[0][2]==turno_De)&&(p->tablero->grilla[1][1]==turno_De)&&(turno_De==p->tablero->grilla[2][0]))
+                        hayGanador=1;
+
+ if(hayGanador==1)
+    if(turno_De==100)
+        p->estado=109;
+     else
+        p->estado=110;
+}
