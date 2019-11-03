@@ -83,5 +83,8 @@ int main()
     crear_raiz(a,e);
     tEntero entero=a_recuperar(a,a_raiz(a));
     printf("La raiz es: %i",entero->entero);
+    a_eliminar(a,a_raiz(a),&eliminarElemento);
+    if (a_raiz(a)==POS_NULA)
+        printf("\nLa raíz fue eliminada");
     return 0;
 }

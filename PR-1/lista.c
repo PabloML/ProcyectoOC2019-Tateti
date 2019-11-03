@@ -240,19 +240,23 @@ extern tElemento l_recuperar(tLista l, tPosicion p)
 **/
 extern void l_destruir(tLista * l, void (*fEliminar)(tElemento))
 {
-    tPosicion pos=(struct celda*)l;
-    tPosicion posSiguiente;
-    while (pos!=POS_NULA)
-     {
-         if (pos->elemento!=ELE_NULO)
-         {
-             fEliminar(pos->elemento);
-         }
-         posSiguiente=pos->siguiente;
-         pos->siguiente=POS_NULA;
-         pos->elemento=ELE_NULO;
-         free(pos);
-         pos=posSiguiente;
-     }
+    tPosicion pos=(*l);
+    tPosicion posSiguiente=pos->siguiente;
+    if (posSiguiente!=POS_NULA)
+    {
+        while (pos!=POS_NULA)
+        {
+           if (pos->elemento!=ELE_NULO)
+           {
+              fEliminar(pos->elemento);
+           }
+           posSiguiente=pos->siguiente;
+           pos->siguiente=POS_NULA;
+           pos->elemento=ELE_NULO;
+           free(pos);
+           pos=posSiguiente;
+        }
+    }
+    else free(pos);
     free(l);
 }

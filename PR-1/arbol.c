@@ -146,21 +146,21 @@ extern tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e)
  Si N es la ra�z de A, y a su vez tiene m�s de un hijo, finaliza retornando ARB_OPERACION_INVALIDA.
  Si N no es la ra�z de A y tiene hijos, estos pasan a ser hijos del padre de N, en el mismo orden y a partir de la posici�n que ocupa N en la lista de hijos de su padre.
 **/
-extern void a_eliminar(tArbol a, tNodo pa, void (*fEliminar)(tElemento))
+extern void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
 {
     if (a==POS_NULA)
     {
         exit(ARB_ERROR_MEMORIA);
     }
-    else if (a->raiz==pa)
+    else if (a->raiz==n)
          {
-           tPosicion p=l_primera(pa->hijos);
+           tPosicion p=l_primera(n->hijos);
            if (p->siguiente!=POS_NULA)
            {
-               if (l_primera(pa->hijos)==l_ultima(pa->hijos))
+               if (l_primera(n->hijos)==l_ultima(n->hijos))
                {
-                   tNodo raizVieja=pa;
-                   tNodo raizNueva=l_recuperar(pa->hijos,l_primera(raizVieja->hijos));
+                   tNodo raizVieja=n;
+                   tNodo raizNueva=l_recuperar(n->hijos,l_primera(raizVieja->hijos));
                    raizNueva->padre=POS_NULA;
                    a->raiz=raizNueva;
                    fEliminar(raizVieja->elemento);
@@ -170,21 +170,21 @@ extern void a_eliminar(tArbol a, tNodo pa, void (*fEliminar)(tElemento))
                else exit(ARB_OPERACION_INVALIDA);
            }
            else {
-                   tNodo raizVieja=pa;
+                   tNodo raizVieja=n;
                    a->raiz=POS_NULA;
-                   fEliminar(&(raizVieja->elemento));
+                   (*fEliminar)(&(raizVieja->elemento));
                    l_destruir(&(raizVieja->hijos),fEliminar);
                    free(raizVieja);
                 }
          }
-         else if (perteneceAlArbol(a,pa)==0)
+         else if (perteneceAlArbol(a,n)==0)
               {
                  exit(ARB_POSICION_INVALIDA);
               }
               else
                    {
-                      tNodo nodoViejo=pa;
-                      tNodo nodoNuevo=l_recuperar(pa->hijos,l_primera(nodoViejo->hijos));
+                      tNodo nodoViejo=n;
+                      tNodo nodoNuevo=l_recuperar(n->hijos,l_primera(nodoViejo->hijos));
                       nodoNuevo->padre=nodoViejo->padre;
                       fEliminar(nodoViejo->elemento);
                       l_eliminar(nodoViejo->hijos,l_primera(nodoViejo->hijos),fEliminar);
