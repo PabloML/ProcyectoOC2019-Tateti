@@ -80,7 +80,6 @@ int main(){
 
     tPartida partida;
     nueva_partida(&partida,modo,comienza,nombre1,nombre2);
-    printf("partida creada");
     int x,y;
 
     while(partida->estado==111){
@@ -95,13 +94,16 @@ int main(){
         nuevo_movimiento(partida,x,y);
 
       }
-
       system("pause");
       limpiarConsola();
     }
-
-
+    printf("Ganador de la partida :");
+    if(partida->modo_partida==108)
+        printf("Jugador 1 : %s",partida->nombre_jugador_1);
+    else
+        printf("Jugador 2 : %s",partida->nombre_jugador_2);
 }
+
  void limpiarConsola(){
     system("cls");
 }
