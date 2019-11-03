@@ -242,21 +242,19 @@ extern void l_destruir(tLista * l, void (*fEliminar)(tElemento))
 {
     tPosicion pos=(*l);
     tPosicion posSiguiente=pos->siguiente;
-    if (posSiguiente!=POS_NULA)
+    while (pos!=POS_NULA && posSiguiente!=POS_NULA)
     {
-        while (pos!=POS_NULA)
-        {
-           if (pos->elemento!=ELE_NULO)
-           {
-              fEliminar(pos->elemento);
-           }
-           posSiguiente=pos->siguiente;
-           pos->siguiente=POS_NULA;
-           pos->elemento=ELE_NULO;
-           free(pos);
-           pos=posSiguiente;
-        }
+       if (pos->elemento!=ELE_NULO)
+       {
+          fEliminar(pos->elemento);
+       }
+       posSiguiente=pos->siguiente;
+       pos->siguiente=POS_NULA;
+       pos->elemento=ELE_NULO;
+       free(pos);
+       pos=posSiguiente;
     }
-    else free(pos);
+    if (pos!=POS_NULA)
+       free(pos);
     free(l);
 }
