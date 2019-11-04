@@ -12,6 +12,9 @@ static tLista estados_sucesores(tEstado e, int ficha_jugador);
 static void diferencia_estados(tEstado anterior, tEstado nuevo, int * x, int * y);
 static tEstado clonar_estado(tEstado e);
 
+int minimo(int x,int y);
+int maximo(int x,int y);
+
 void noEliminaEstado(void *e){    }
 
 void eliminarEstado(void *e){
@@ -19,23 +22,23 @@ void eliminarEstado(void *e){
     free(estado);
 }
 
-int max(int num1, int num2) {
-   int result;
-   if (num1 > num2)
-      result = num1;
+int maximo(int x, int y) {
+   int salida;
+   if (x > y)
+      salida = x;
    else
-      result = num2;
-   return result;
+      salida = y;
+   return salida;
 }
 
 
-int min(int num1, int num2) {
-   int result;
-   if (num1 > num2)
-      result = num2;
+int minimo(int x, int y) {
+   int salida;
+   if (x > y)
+      salida = y;
    else
-      result = num1;
-   return result;
+      salida = x;
+   return salida;
 }
 
 
@@ -72,9 +75,7 @@ void crear_busqueda_adversaria(tBusquedaAdversaria * b, tPartida p){
     // Ejecuta algoritmo Min-Max con podas Alpha-Beta.
     ejecutar_min_max((*b));
 }
-/**
- 
-**/
+
 void proximo_movimiento(tBusquedaAdversaria b, int * x, int * y){
     tArbol arbol;
     tNodo raiz;
@@ -105,8 +106,7 @@ void proximo_movimiento(tBusquedaAdversaria b, int * x, int * y){
         corte=valoraux==utilidad;
         pos= l_siguiente(hijosRaiz, pos);
     }
-    diferencia_estados(eactual, eaux, x,y);
-
+    diferencia_estados(eactual, eaux,x,y);
 }
 
 /**
@@ -117,10 +117,6 @@ void destruir_busqueda_adversaria(tBusquedaAdversaria * b){
     (*b)->jugador_min=-1;
     a_destruir(&((*b)->arbol_busqueda), &eliminarEstado);
 }
-
-// ===============================================================================================================
-// FUNCIONES Y PROCEDEMIENTOS AUXILIARES
-// ===============================================================================================================
 
 /**
 Ordena la ejecuci�n del algoritmo Min-Max para la generaci�n del �rbol de b�squeda adversaria, considerando como
@@ -170,8 +166,8 @@ static void crear_sucesores_min_max(tArbol a, tNodo n, int es_max, int alpha, in
                 l_eliminar(sucesores, pos,&noEliminaEstado);
                 crear_sucesores_min_max(a, hijoSucesor, !es_max, alpha, beta, jugador_max, jugador_min);
                 valorSucesor=estadoSucesor->utilidad;
-                mejor_valor_sucesores= max(mejor_valor_sucesores, valorSucesor);
-                alpha= max(alpha, mejor_valor_sucesores);
+                mejor_valor_sucesores= maximo(mejor_valor_sucesores, valorSucesor);
+                alpha= maximo(alpha, mejor_valor_sucesores);
                 if(beta<=alpha)
                     seguir=0;
             }
@@ -185,8 +181,8 @@ static void crear_sucesores_min_max(tArbol a, tNodo n, int es_max, int alpha, in
                 l_eliminar(sucesores, pos,&noEliminaEstado);
                 crear_sucesores_min_max(a, hijoSucesor, !es_max, alpha, beta, jugador_max, jugador_min);
                 valorSucesor=estadoSucesor->utilidad;
-                mejor_valor_sucesores= min(mejor_valor_sucesores, valorSucesor);
-                beta= min(beta, mejor_valor_sucesores);
+                mejor_valor_sucesores= minimo(mejor_valor_sucesores, valorSucesor);
+                beta= minimo(beta, mejor_valor_sucesores);
                 if(beta<=alpha)
                     seguir=0;
             }
@@ -325,8 +321,8 @@ La posici�n en la que los estados difiere, es retornada en los par�metros *X
 **/
 static void diferencia_estados(tEstado anterior, tEstado nuevo, int * x, int * y){
     int i,j, hallado = 0;
-    for(i=0; i<3 && 0==hallado; i++){
-        for(j=0; j<3 && 0==hallado; j++){
+    for(i=0; i<3 && !hallado; i++){
+        for(j=0; j<3 && !hallado; j++){
             if (anterior->grilla[i][j] != nuevo->grilla[i][j]){
                 *x = i;
                 *y = j;
@@ -335,3 +331,4 @@ static void diferencia_estados(tEstado anterior, tEstado nuevo, int * x, int * y
         }
     }
 }
+
