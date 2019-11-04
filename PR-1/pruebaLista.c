@@ -97,7 +97,14 @@ int main()
     tEntero ent=pos->elemento;
     int in=ent->entero;
     printf("%i\n",in);
-    //a_eliminar(a,(tNodo) p,&eliminarElemento);
-    a_destruir(&a,&eliminarElemento);
+    tEntero tercero=(tEntero)malloc(sizeof(struct entero));
+    segundo->entero=4;
+    a_insertar(a,(tNodo)pos,POS_NULA,tercero);
+    tPosicion posi=l_recuperar(((tNodo)pos)->hijos,l_primera(a_raiz(a)->hijos));
+    tEntero ente=posi->elemento;
+    int inti=ente->entero;
+    printf("%i\n",inti);
+    a_eliminar(a,(tNodo) pos,&eliminarElemento);
+    //a_destruir(&a,&eliminarElemento);
     return 0;
 }
