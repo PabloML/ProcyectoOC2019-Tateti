@@ -77,7 +77,7 @@ int perteneceAlArbol(tArbol a, tNodo n)
 tPosicion recuperarPosicion(tLista l,tNodo n)
 {
     tPosicion p=l_primera(l);
-    while (l_recuperar(l,p)!=n)
+    while (p!=l_ultima(l) && l_recuperar(l,p)!=n)
     {
         p=l_siguiente(l,p);
     }
@@ -187,7 +187,7 @@ extern void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
                           tNodo nodoNuevo=l_recuperar(nodoViejo->hijos,l_primera(nodoViejo->hijos));
                           nodoNuevo->padre=nodoViejo->padre;
                           tPosicion pos=recuperarPosicion(nodoViejo->padre->hijos,n);
-                          l_insertar(nodoViejo->padre->hijos,pos->siguiente,nodoNuevo);
+                          l_insertar(nodoViejo->padre->hijos,pos,nodoNuevo);
                           fEliminar(nodoViejo->elemento);
                           l_eliminar(nodoViejo->hijos,l_primera(nodoViejo->hijos),fEliminar);
                           tPosicion p=l_primera(nodoViejo->hijos);
@@ -223,7 +223,6 @@ extern void a_destruir(tArbol * a, void (*fEliminar)(tElemento))
         (*fEliminar)(arbol->raiz->elemento);
         l_destruir(&(arbol->raiz->hijos),fEliminar);
         free(arbol->raiz);
-        free(arbol);
         free(a);
     }
 }
