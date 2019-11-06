@@ -6,17 +6,18 @@
 
 1568301687 d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\pr-1\lista.h
 
-1568875468 source:c:\users\usuario\desktop\programas pablo\organización de computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\lista.c
+1573001959 source:c:\users\usuario\desktop\programas pablo\organización de computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\lista.c
 	<stdio.h>
 	<stdlib.h>
 	"lista.h"
 
-1568875468 c:\users\usuario\desktop\programas pablo\organización de computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\lista.h
+1572828664 c:\users\usuario\desktop\programas pablo\organización de computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\lista.h
 
-1568914829 source:c:\users\usuario\desktop\programas pablo\organización de computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\pruebalista.c
+1573000768 source:c:\users\usuario\desktop\programas pablo\organización de computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\pruebalista.c
 	<stdio.h>
 	<stdlib.h>
 	"lista.h"
+	"arbol.h"
 
 1572820370 source:d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\lista.c
 	<stdio.h>
@@ -39,4 +40,7 @@
 	<stdlib.h>
 	"lista.h"
 	"arbol.h"
+
+1572828664 c:\users\usuario\desktop\programas pablo\organización de computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\arbol.h
+	"lista.h"
 

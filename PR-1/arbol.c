@@ -171,7 +171,7 @@ extern void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
            else {
                    tNodo raizVieja=n;
                    a->raiz=POS_NULA;
-                   (*fEliminar)(&(raizVieja->elemento));
+                   fEliminar(&(raizVieja->elemento));
                    l_destruir(&(raizVieja->hijos),fEliminar);
                    free(raizVieja);
                 }
@@ -181,7 +181,8 @@ extern void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
 
                  exit(ARB_POSICION_INVALIDA);
                }
-               else { tNodo nodoViejo=n;
+               else {
+                      tNodo nodoViejo=n;
                       if (l_primera(nodoViejo->hijos)->siguiente!=POS_NULA)
                       {
                           tNodo nodoNuevo=l_recuperar(nodoViejo->hijos,l_primera(nodoViejo->hijos));
@@ -200,6 +201,7 @@ extern void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
                       }
                       l_destruir(&(nodoViejo->hijos),fEliminar);
                       tPosicion position=recuperarPosicion(nodoViejo->padre->hijos,n);
+                      nodoViejo->padre=POS_NULA;
                       l_eliminar(nodoViejo->padre->hijos,position,fEliminar);
                       free(nodoViejo);
                    }
@@ -220,10 +222,10 @@ extern void a_destruir(tArbol * a, void (*fEliminar)(tElemento))
            a_eliminar(arbol,l_recuperar(arbol->raiz->hijos,p),fEliminar);
            p=l_primera(arbol->raiz->hijos);
         }
-        (*fEliminar)(arbol->raiz->elemento);
+        fEliminar(arbol->raiz->elemento);
         l_destruir(&(arbol->raiz->hijos),fEliminar);
         free(arbol->raiz);
-        free(a);
+        free(arbol);
     }
 }
 

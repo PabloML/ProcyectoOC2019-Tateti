@@ -104,7 +104,7 @@ int main()
     tEntero ente=posi->elemento;
     int inti=ente->entero;
     printf("%i\n",inti);
-    //a_eliminar(a,(tNodo) pos,&eliminarElemento);
-    a_destruir(&a,&eliminarElemento);
+    a_eliminar(a,(tNodo) posi,&eliminarElemento);
+    //a_destruir(&a,&eliminarElemento);
     return 0;
 }
