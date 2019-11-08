@@ -68,7 +68,7 @@ int perteneceAlArbol(tArbol a, tNodo n)
     {
        n=n->padre;
     }
-    if (n==POS_NULA)
+    if (n!=(a->raiz) && (n->padre)!=a->raiz && (n==POS_NULA || n->padre==POS_NULA))
     {
        res=0;
     }
@@ -178,12 +178,11 @@ extern void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
          }
          else  if (perteneceAlArbol(a,n)==0)
                {
-
                  exit(ARB_POSICION_INVALIDA);
                }
                else {
                       tNodo nodoViejo=n;
-                      if (l_primera(nodoViejo->hijos)->siguiente!=POS_NULA)
+                      if (l_primera(nodoViejo->hijos)!=l_fin(nodoViejo->hijos))
                       {
                           tNodo nodoNuevo=l_recuperar(nodoViejo->hijos,l_primera(nodoViejo->hijos));
                           nodoNuevo->padre=nodoViejo->padre;
@@ -192,7 +191,7 @@ extern void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
                           fEliminar(nodoViejo->elemento);
                           l_eliminar(nodoViejo->hijos,l_primera(nodoViejo->hijos),fEliminar);
                           tPosicion p=l_primera(nodoViejo->hijos);
-                          while (p->siguiente!=POS_NULA)
+                          while (p!=l_fin(nodoViejo->hijos))
                           {
                              l_insertar(nodoNuevo->hijos,l_primera(nodoViejo->hijos),l_recuperar(nodoViejo->hijos,l_primera(nodoViejo->hijos)));
                              l_eliminar(nodoViejo->hijos,l_primera(nodoViejo->hijos),fEliminar);
@@ -200,7 +199,7 @@ extern void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
                           }
                       }
                       l_destruir(&(nodoViejo->hijos),fEliminar);
-                      tPosicion position=recuperarPosicion(nodoViejo->padre->hijos,n);
+                      tPosicion position=recuperarPosicion(nodoViejo->padre->hijos,nodoViejo);
                       nodoViejo->padre=POS_NULA;
                       l_eliminar(nodoViejo->padre->hijos,position,fEliminar);
                       free(nodoViejo);
