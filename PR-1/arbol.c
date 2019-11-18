@@ -20,17 +20,18 @@ Una referencia al �rbol creado es referenciado en *A.
 **/
 extern void crear_arbol(tArbol * a)
 {
-    if (a==POS_NULA)
+    if (a==NULL)
     {
         exit(ARB_ERROR_MEMORIA);
     }
     else {
-            (*a)=(tArbol)malloc(sizeof(struct arbol));
-             if ((*a)!=POS_NULA)
+            (*a)=(struct arbol*)malloc(sizeof(struct arbol));
+             if ((*a)!=NULL)
              {
-                (*a)->raiz=POS_NULA;
+                (*a)->raiz=NULL;
              }
-             else exit(ARB_ERROR_MEMORIA);
+             else
+                 exit(ARB_ERROR_MEMORIA);
          }
 }
 
@@ -40,23 +41,23 @@ Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
 **/
 extern void crear_raiz(tArbol a, tElemento e)
 {
-    if (a==POS_NULA)
+    if (a==NULL)
     {
         exit(ARB_ERROR_MEMORIA);
     }
-    else if (a->raiz!=POS_NULA)
+    else if (a->raiz!=NULL)
          {
              exit(ARB_OPERACION_INVALIDA);
          }
          else {
-                 a->raiz=(tNodo)malloc(sizeof(struct nodo));
-                 if (a->raiz!=POS_NULA)
+                 tNodo futuraRaiz=(tNodo)malloc(sizeof(struct nodo));
+                 
+                 if (futuraRaiz!=NULL && nodo!=0)
                  {
-                     a->raiz->elemento=e;
-                     tLista l;
-                     crear_lista(&l);
-                     a->raiz->hijos=l;
-                     a->raiz->padre=POS_NULA;
+                     crear_lista(&(futuraRaiz->hijos));
+                     futuraRaiz->padre=NULL;
+                     futuraRaiz->elemento=e;
+                      a->raiz=futuraRaiz;
                  }
                  else exit(ARB_ERROR_MEMORIA);
               }
@@ -93,7 +94,7 @@ tPosicion recuperarPosicion(tLista l,tNodo n)
 extern tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e)
 {
     tNodo nodo=POS_NULA;
-    if (a==POS_NULA)
+    if (a==NULL)
     {
         exit(ARB_ERROR_MEMORIA);
     }
@@ -101,7 +102,7 @@ extern tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e)
             {
                exit(ARB_POSICION_INVALIDA);
             }
-         else if (np==POS_NULA)
+         else if (np==NULL)
               {
                  exit(ARB_POSICION_INVALIDA);
               }
@@ -147,40 +148,24 @@ extern tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e)
 **/
 extern void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
 {
-    if (a==POS_NULA)
+    tLista hijosN=n->hijos;
+    if (a==NULL)
     {
         exit(ARB_ERROR_MEMORIA);
     }
     else if (a->raiz==n)
          {
-           tPosicion p=l_primera(n->hijos);
-           if (p->siguiente!=POS_NULA)
+            int tamañoDeN=l_tamaño(hijosN);
+            if(tamañoDeN==1){
+                a->raiz=(tNodo)l_recuperar(hijosN,l_primera(hijosN));
+                a->raiz->padre=NULL; 
+            }
+            else
+                if(tamañoDeN>1)
+                    exit(ARB_OPERACION_INVALIDA);
+        }
+         else 
            {
-               if (l_primera(n->hijos)==l_ultima(n->hijos))
-               {
-                   tNodo raizVieja=n;
-                   tNodo raizNueva=l_recuperar(n->hijos,l_primera(raizVieja->hijos));
-                   raizNueva->padre=POS_NULA;
-                   a->raiz=raizNueva;
-                   fEliminar(raizVieja->elemento);
-                   l_destruir(&(raizVieja->hijos),fEliminar);
-                   free(raizVieja);
-               }
-               else exit(ARB_OPERACION_INVALIDA);
-           }
-           else {
-                   tNodo raizVieja=n;
-                   a->raiz=POS_NULA;
-                   fEliminar(&(raizVieja->elemento));
-                   l_destruir(&(raizVieja->hijos),fEliminar);
-                   free(raizVieja);
-                }
-         }
-         else  if (perteneceAlArbol(a,n)==0)
-               {
-                 exit(ARB_POSICION_INVALIDA);
-               }
-               else {
                       tNodo nodoViejo=n;
                       if (l_primera(nodoViejo->hijos)!=l_fin(nodoViejo->hijos))
                       {
@@ -212,37 +197,35 @@ extern void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
 **/
 extern void a_destruir(tArbol * a, void (*fEliminar)(tElemento))
 {
-    if (a!=POS_NULA)
+    if (a!=NULL)
     {
-        tArbol arbol=(*a);
-        tPosicion p=l_primera(arbol->raiz->hijos);
-        while (p->siguiente!=POS_NULA)
-        {
-           a_eliminar(arbol,l_recuperar(arbol->raiz->hijos,p),fEliminar);
-           p=l_primera(arbol->raiz->hijos);
-        }
-        fEliminar(arbol->raiz->elemento);
-        l_destruir(&(arbol->raiz->hijos),fEliminar);
-        free(arbol->raiz);
-        free(arbol);
+       destruirAux(*a,(*a)->raiz,fEliminar);
+        (*a)->raiz=NULL;
+        free(*a);
+        (*a)=NULL;
+        
     }
 }
+void destruirAux(tArbol a,tNodo n ,void (*fEliminar)(tElemento)){
+    tPosicion pos=l_primera(n->hijos);
+    while(pos !=l_fin(n->hijos)){
+        destruirAux(a,l_recuperar(n->hijos,pos,fEliminar));    
+    }
+    a_eliminar(a,n,fEliminar);
+}
+
 
 /**
 Recupera y retorna el elemento del nodo N.
 */
 extern tElemento a_recuperar(tArbol a, tNodo n)
 {
-    tElemento e=n->elemento;
-    if (a==POS_NULA)
+    if (a==NULL)
     {
         exit(ARB_ERROR_MEMORIA);
     }
-    else if (perteneceAlArbol(a,n)==0)
-         {
-            exit(ARB_POSICION_INVALIDA);
-         }
-    return e;
+    else
+     return n->elemento;
 }
 
 /**
@@ -250,7 +233,7 @@ Recupera y retorna el nodo correspondiente a la ra�z de A.
 **/
 extern tNodo a_raiz(tArbol a)
 {
-    if (a==POS_NULA)
+    if (a==NULL)
     {
          exit(ARB_ERROR_MEMORIA);
     }
@@ -262,16 +245,12 @@ extern tNodo a_raiz(tArbol a)
 **/
 extern tLista a_hijos(tArbol a, tNodo n)
 {
-    tLista l=n->hijos;
-    if (a==POS_NULA)
+    if (a==NULL)
     {
        exit(ARB_ERROR_MEMORIA);
     }
-    else if (perteneceAlArbol(a,n)==0)
-         {
-            exit(ARB_POSICION_INVALIDA);
-         }
-    return l;
+    else 
+        return n->hijos;
 }
 
 /**
@@ -281,32 +260,38 @@ extern tLista a_hijos(tArbol a, tNodo n)
 **/
 extern void a_sub_arbol(tArbol a, tNodo n, tArbol * sa)
 {
-  if (a==POS_NULA)
+  if (a==NULL)
    {
        exit(ARB_ERROR_MEMORIA);
    }
-   else if (n==POS_NULA)
+   else if (n==NULL)
         {
             exit(ARB_POSICION_INVALIDA);
         }
-        else if (perteneceAlArbol(a,n)==0)
-             {
-                 exit(ARB_POSICION_INVALIDA);
+        else
+            {
+                     \\asumo que tnodo n se encuentra en el arbol 
+                    tLista listaDeHermanos ;       
+                    tPosicion pos,fin;
+                        
+                    crear_arbol(sa);
+                    crear_raiz(*sa,n->elemento);
+                    (*sa)->raiz->hijos=n->hijos;   
+                    
+                    if(n!=a->raiz){
+                      listaDeHermanos=n->padre->hijos;
+                      pos=l_primera(listaDeHermanos);  
+                      fin=l_fin(listaDeHermanos);
+                      while(pos!=fin && l_recuperar(listaDeHermanos,pos)!=n){
+                          pos=l_siguiente(listaDeHermanos,pos);
+                      }
+                      if(pos!=fin){
+                          l_eliminar(listaDeHermanos,pos,eliminar_nodo);
+                          n->padre=NULL;
+                      }
+                      else
+                          exit(ARB_POSICION_INVALIDA);
+                          
+                   }             
              }
-             else
-                 {
-                    tArbol arbol=(*sa);
-                    if (arbol==POS_NULA)
-                    {
-                        crear_arbol(sa);
-                    }
-                    tPosicion p=recuperarPosicion(n->padre->hijos,n);
-                    n->padre=POS_NULA;
-                    arbol->raiz=n;
-                    tPosicion siguiente=p->siguiente;
-                    p->siguiente=siguiente->siguiente;
-                    siguiente->siguiente=POS_NULA;
-                    siguiente->elemento=POS_NULA;
-                    free(siguiente);
-                 }
 }
