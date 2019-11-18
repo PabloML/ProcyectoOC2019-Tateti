@@ -62,28 +62,7 @@ extern void crear_raiz(tArbol a, tElemento e)
                  else exit(ARB_ERROR_MEMORIA);
               }
 }
-int perteneceAlArbol(tArbol a, tNodo n)
-{
-    int res=1;
-    while (n!=(a->raiz) && (n->padre)!=a->raiz && n->padre!=POS_NULA && n!=POS_NULA)
-    {
-       n=n->padre;
-    }
-    if (n!=(a->raiz) && (n->padre)!=a->raiz && (n==POS_NULA || n->padre==POS_NULA))
-    {
-       res=0;
-    }
-    return res;
-}
-tPosicion recuperarPosicion(tLista l,tNodo n)
-{
-    tPosicion p=l_primera(l);
-    while (p!=l_ultima(l) && l_recuperar(l,p)!=n)
-    {
-        p=l_siguiente(l,p);
-    }
-    return p;
-}
+
 /**
  Inserta y retorna un nuevo nodo en A.
  El nuevo nodo se agrega en A como hijo de NP, hermano izquierdo de NH, y cuyo r�tulo es E.
@@ -93,51 +72,39 @@ tPosicion recuperarPosicion(tLista l,tNodo n)
 **/
 extern tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e)
 {
-    tNodo nodo=POS_NULA;
     if (a==NULL)
     {
         exit(ARB_ERROR_MEMORIA);
     }
-    else if (perteneceAlArbol(a,np)==0)
-            {
-               exit(ARB_POSICION_INVALIDA);
-            }
-         else if (np==NULL)
+    else
+        if (np==NULL)
               {
                  exit(ARB_POSICION_INVALIDA);
               }
-              else if (nh==POS_NULA)
-                   {
-                       nodo=(tNodo)malloc(sizeof(struct nodo));
-                       if (nodo!=POS_NULA)
-                       {
-                           nodo->elemento=e;
-                           tLista l;
-                           crear_lista(&l);
-                           nodo->hijos=l;
-                           nodo->padre=np;
-                           l_insertar(np->hijos,l_primera(np->hijos),nodo);
-                        }
-                        else exit(ARB_ERROR_MEMORIA);
-                   }
-                   else if (nh->padre!=np)
-                        {
-                            exit(ARB_POSICION_INVALIDA);
-                        }
-                        else {
-                                nodo=(tNodo)malloc(sizeof(struct nodo));
-                                if (nodo!=POS_NULA)
-                                {
-                                    nodo->elemento=e;
-                                    tLista l;
-                                    crear_lista(&l);
-                                    nodo->hijos=l;
-                                    nodo->padre=np;
-                                    l_insertar(np->hijos,recuperarPosicion(np->hijos,nh),nodo);
-                                }
-                                else exit(ARB_ERROR_MEMORIA);
-                              }
-    return nodo;
+         else {
+                tLista hermanosNUEVO=np->hijos;
+                tNodo nuevoHijo=(tNodo)malloc(sizeof(struct nodo));
+                if(nuevoHijo==NULL || nuevoHijo==0)
+                     exit(ARB_ERROR_MEMORIA);
+                crear_lista(&(nuevoHijo->hijos));
+                nuevoHijo->elemento=e;
+                nuevoHijo->padre=np;
+                tPosicion posHermanosNUEVO=l_primera(hermanosNUEVO);
+                tPocision finHermanosNUEVO=l_fin(hermanosNUEVO);
+                if(nh==NULL){
+                    posHermanosNUEVO=l_fin(hermanosNUEVO);                
+                }
+                else{
+                    while(posHermanosNUEVO!=finHermanosNUEVO && l_recuperar(hermanosNUEVO,posHermanosNUEVO))
+                        posHermanosNUEVO=l_siguiente(hermanosNUEVO,posHermanosNUEVO);
+                    if(posHermanosNUEVO==finHermanosNUEVO)
+                           exit(ARB_POSICION_INVALIDA);
+                }
+                l_insertar(hermanosNUEVO,posHermanosNUEVO,nuevoHijo);  
+             return nuevoHijo;
+         }
+             
+                      
 }
 
 /**
@@ -163,32 +130,35 @@ extern void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
             else
                 if(tamañoDeN>1)
                     exit(ARB_OPERACION_INVALIDA);
-        }
+         }
          else 
            {
-                      tNodo nodoViejo=n;
-                      if (l_primera(nodoViejo->hijos)!=l_fin(nodoViejo->hijos))
-                      {
-                          tNodo nodoNuevo=l_recuperar(nodoViejo->hijos,l_primera(nodoViejo->hijos));
-                          nodoNuevo->padre=nodoViejo->padre;
-                          tPosicion pos=recuperarPosicion(nodoViejo->padre->hijos,n);
-                          l_insertar(nodoViejo->padre->hijos,pos,nodoNuevo);
-                          fEliminar(nodoViejo->elemento);
-                          l_eliminar(nodoViejo->hijos,l_primera(nodoViejo->hijos),fEliminar);
-                          tPosicion p=l_primera(nodoViejo->hijos);
-                          while (p!=l_fin(nodoViejo->hijos))
-                          {
-                             l_insertar(nodoNuevo->hijos,l_primera(nodoViejo->hijos),l_recuperar(nodoViejo->hijos,l_primera(nodoViejo->hijos)));
-                             l_eliminar(nodoViejo->hijos,l_primera(nodoViejo->hijos),fEliminar);
-                             p=l_primera(nodoViejo->hijos);
-                          }
-                      }
-                      l_destruir(&(nodoViejo->hijos),fEliminar);
-                      tPosicion position=recuperarPosicion(nodoViejo->padre->hijos,nodoViejo);
-                      nodoViejo->padre=POS_NULA;
-                      l_eliminar(nodoViejo->padre->hijos,position,fEliminar);
-                      free(nodoViejo);
+                  tNodo padreN=n->padre;
+                  tLista hermanosN=padreN->hijos;
+                  tPosicion posHermanosN=l_primera(hermanosN); 
+                  tPosicion finHermanosN=l_fin(hermanosN);   
+                  tPosicion posHijosN=l_primera(hijosN);
+                  tPosicion finHijosN=l_fin(hijosN);
+                  while(posHermanosN!=finHermanosN && l_recuperar(hermanosN,posHermanosN)!=n)
+                      posHermanosN=l_siguiente(hermanosN,posHermanosN);
+                  if(posHermanosN == finHermanosN)
+                      exit(ARB_POSICION_INVALIDA);
+                   while(posHijosN!=finHijosN){
+                      tNodo nuevoHijoN=l_recuperar(hijosN,posHijosN);
+                      nuevoHijoN->padre=padreN;
+                      l_insertar(hermanosN,posHermanosN,nuevoHijoN); 
+                      posHijosN=l_siguiente(hijosN,posHijosN); 
+                      posHermanosN=l_siguiente(hermanosN,posHermanosN); 
                    }
+                   l_eliminar(hermanosN,posHermanosN,eliminar_nodo);
+            }
+    fEliminar(n->elemento);
+    l_destruir(&hijosN,eliminar_nodo);
+    n->hijos=NULL;
+    n->padre=NULL;
+    n->elemento=NULL;
+    free(n);
+    n=NULL;
 }
 
 /**
