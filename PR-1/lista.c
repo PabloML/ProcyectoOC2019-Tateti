@@ -167,3 +167,12 @@ extern void l_destruir(tLista * l, void (*fEliminar)(tElemento))
     }
        free(l);
 }
+int l_tamaño(tLista l) {
+    int i=0;
+    tPosicion pos = l->siguiente;
+    while(pos!=NULL) {
+        i++;
+        pos=pos->siguiente;
+    }
+    return i;
+}
