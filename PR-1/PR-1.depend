@@ -1,0 +1,46 @@
+# depslib dependency file v1.0
+1568661955 source:d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\pr-1\lista.c
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+
+1568301687 d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\pr-1\lista.h
+
+1573001959 source:c:\users\usuario\desktop\programas pablo\organización de computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\lista.c
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+
+1572828664 c:\users\usuario\desktop\programas pablo\organización de computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\lista.h
+
+1573000768 source:c:\users\usuario\desktop\programas pablo\organización de computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\pruebalista.c
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+	"arbol.h"
+
+1574192192 source:d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\lista.c
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+
+1571404719 d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\lista.h
+
+1574192184 source:d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\arbol.c
+	<stdio.h>
+	<stdlib.h>
+	"arbol.h"
+	"lista.h"
+
+1571404702 d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\arbol.h
+	"lista.h"
+
+1574192005 source:d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\pruebalista.c
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+	"arbol.h"
+
+1572828664 c:\users\usuario\desktop\programas pablo\organización de computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\arbol.h
+	"lista.h"
+
