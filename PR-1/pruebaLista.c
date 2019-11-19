@@ -78,7 +78,7 @@ int main()
         printf("\nLa lista fue destruida.\n");*/
     tArbol a;
     crear_arbol(&a);
-    tEntero e=(tEntero)malloc(sizeof(struct entero));
+    /*tEntero e=(tEntero)malloc(sizeof(struct entero));
     e->entero=1;
     crear_raiz(a,e);
     tEntero entero=a_recuperar(a,a_raiz(a));
@@ -103,8 +103,8 @@ int main()
     tPosicion posi=l_recuperar(((tNodo)pos)->hijos,l_primera(a_raiz(a)->hijos));
     tEntero ente=posi->elemento;
     int inti=ente->entero;
-    printf("%i\n",inti);
-    a_eliminar(a,(tNodo) posi,&eliminarElemento);
+    printf("%i\n",inti);*/
+    a_eliminar(a,a_raiz(a),&eliminarElemento);
     //a_destruir(&a,&eliminarElemento);
     return 0;
 }
