@@ -78,21 +78,15 @@ void crear_busqueda_adversaria(tBusquedaAdversaria * b, tPartida p){
  En caso contrario, se indicar� un movimiento que lleva a MAX a perder la partida.
 **/
 void proximo_movimiento(tBusquedaAdversaria b, int * x, int * y){
-    tArbol arbol;
-    tNodo raiz;
-    tEstado eactual;
-    tLista hijosRaiz;
-    tPosicion pos;
-    tPosicion posFin;
+        
+    tArbol arbol=b->arbol_busqueda;
+    tNodo raiz=a_raiz(arbol);
+    tLista hijosRaiz= a_hijos(arbol, raiz);
 
-    arbol=b->arbol_busqueda;
-    raiz=a_raiz(arbol);
-    hijosRaiz= a_hijos(arbol, raiz);
+    tPosicion pos=l_primera(hijosRaiz);
+    tPosicion posFin= l_fin(hijosRaiz);
 
-    pos=l_primera(hijosRaiz);
-    posFin= l_fin(hijosRaiz);
-
-    eactual= a_recuperar(arbol, raiz);
+    tEstado eactual= a_recuperar(arbol, raiz);
     int utilidad=eactual->utilidad;
 
     tNodo naux;
