@@ -13,7 +13,7 @@
 #define ARB_ERROR_MEMORIA           12
 #define POS_NULA NULL
 #define ELE_NULO NULL
-int l_cant(tLista l) {
+int hijos_cant(tLista l) {
     int i=0;
     tPosicion pos = l->siguiente;
     while(pos!=NULL) {
@@ -117,7 +117,7 @@ Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
     }
     else if (a->raiz==n)
          {
-            int cantDeN=l_cant(hijosN);
+            int cantDeN=hijos_cant(hijosN);
             if(cantDeN==1){
                 a->raiz=(tNodo)l_recuperar(hijosN,l_primera(hijosN));
                 a->raiz->padre=NULL;
@@ -169,7 +169,7 @@ Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
         (*a)=NULL;
 }
 /**
- Destruye arbol recursisavemente 
+ Destruye arbol recursisavemente
 */
 void destruirAux(tArbol a,tNodo n ,void (*fEliminar)(tElemento)){
     tPosicion pos=l_primera(n->hijos);
