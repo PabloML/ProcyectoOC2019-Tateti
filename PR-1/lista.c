@@ -159,3 +159,12 @@
     }
        free(l);
 }
+int l_cant(tLista l) {
+    int i=0;
+    tPosicion pos = l->siguiente;
+    while(pos!=NULL) {
+       i++;
+       pos=pos->siguiente;
+    }
+    return i;
+}
