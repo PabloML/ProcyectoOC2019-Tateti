@@ -13,6 +13,7 @@
 #define ARB_ERROR_MEMORIA           12
 #define POS_NULA NULL
 #define ELE_NULO NULL
+int l_cant();
 void eliminar_nodo(void* e) {   }
 void destruirAux(tArbol a,tNodo n ,void (*fEliminar)(tElemento));
 /**
