@@ -11,17 +11,7 @@ static int valor_utilidad(tEstado e, int jugador_max);
 static tLista estados_sucesores(tEstado e, int ficha_jugador);
 static void diferencia_estados(tEstado anterior, tEstado nuevo, int * x, int * y);
 static tEstado clonar_estado(tEstado e);
-/**
-    un eliminar que se usa como parametro .l_eliminar para simular un feliminar original que no hace nd.
-**/
-void noElimina(void  *e){    }
-    /**
-        un eliminar que se  utiliza en eliminar de arbol o lista, liberando el espacio en memoria del elemento(estado)
-    **/
-void eliminarEstado(void *e){
-    tEstado estado= (tEstado) e;
-    free(estado);
-}
+
     /**
         Determina max entre x e y ;para luego retornarlo.
     **/
@@ -337,4 +327,16 @@ static void diferencia_estados(tEstado anterior, tEstado nuevo, int * x, int * y
             }
         }
     }
+}
+
+/**
+    un eliminar que se usa como parametro .l_eliminar para simular un feliminar original que no hace nd.
+**/
+void noElimina(void  *e){    }
+    /**
+        un eliminar que se  utiliza en eliminar de arbol o lista, liberando el espacio en memoria del elemento(estado)
+    **/
+void eliminarEstado(void *e){
+    tEstado estado= (tEstado) e;
+    free(estado);
 }
