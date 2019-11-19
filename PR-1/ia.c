@@ -142,7 +142,7 @@ static void ejecutar_min_max(tBusquedaAdversaria b){
     tNodo raizAB = a_raiz(AB);
     int jMax = b->jugador_max;
     int jMin = b->jugador_min;
-    crear_sucesores_min_max(AB, raizAB, 1, IA_INFINITO_NEG, IA_INFINITO_POS, jugador_max, jugador_min);
+    crear_sucesores_min_max(AB, raizAB, 1, IA_INFINITO_NEG, IA_INFINITO_POS, jMax, jMin);
 }
 
 /**
@@ -210,7 +210,7 @@ Devuelve una posicion de la lista de forma aleatoria, puede ser l_primera(l), l_
 tPosicion posicionAleatoria(tLista lista){
     tPosicion salida;
     int numero= rand()%3;
-    
+
     if(numero==0)
         salida=l_primera(lista);
         else
