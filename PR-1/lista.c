@@ -6,7 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lista.h"
-
+#define POS_NULA NULL
+#define ELE_NULO NULL
 
 /**
  Inicializa una lista vacía.
@@ -146,25 +147,21 @@
 **/
  void l_destruir(tLista * l, void (*fEliminar)(tElemento))
 {
-    tPosicion pos=(*l);
-    tPosicion posSiguiente;
-    while (pos->siguiente!=NULL)
+     tPosicion pos=(*l);
+    tPosicion posSiguiente=pos->siguiente;
+    while (pos!=POS_NULA && posSiguiente!=POS_NULA)
     {
+       if (pos->elemento!=ELE_NULO)
+       {
+          fEliminar(pos->elemento);
+       }
        posSiguiente=pos->siguiente;
-       fEliminar(posSiguiente->elemento);
-       pos->elemento=NULL;
-       pos->siguiente=posSiguiente->siguiente;
-       posSiguiente->siguiente=NULL;
-       free(posSiguiente);
+       pos->siguiente=POS_NULA;
+       pos->elemento=ELE_NULO;
+       free(pos);
+       pos=posSiguiente;
+       posSiguiente=pos->siguiente;
     }
-       free(l);
-}
-int l_cant(tLista l) {
-    int i=0;
-    tPosicion pos = l->siguiente;
-    while(pos!=NULL) {
-       i++;
-       pos=pos->siguiente;
-    }
-    return i;
+    if (pos!=POS_NULA)
+       free(pos);
 }

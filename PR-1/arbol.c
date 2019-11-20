@@ -13,17 +13,9 @@
 #define ARB_ERROR_MEMORIA           12
 #define POS_NULA NULL
 #define ELE_NULO NULL
-int l_cant(tLista l) {
-    int i=0;
-    tPosicion pos = l->siguiente;
-    while(pos!=NULL) {
-        i++;
-        pos=pos->siguiente;
-    }
-    return i;
-}
-void eliminar_nodo(void* e) {   }
+
 void destruirAux(tArbol a,tNodo n ,void (*fEliminar)(tElemento));
+
 /**
 Inicializa un �rbol vac�o.
 Una referencia al �rbol creado es referenciado en *A.
@@ -111,19 +103,20 @@ Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
  void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
 {
     tLista hijosN=n->hijos;
-    if (a==NULL)
+    if (a==POS_NULA)
     {
         exit(ARB_ERROR_MEMORIA);
     }
     else if (a->raiz==n)
          {
-            int cantDeN=l_cant(hijosN);
-            if(cantDeN==1){
-                a->raiz=(tNodo)l_recuperar(hijosN,l_primera(hijosN));
-                a->raiz->padre=NULL;
+            if(l_primera(a->raiz->hijos)==l_ultima(a->raiz->hijos) && l_primera(a->raiz->hijos)!=l_fin(a->raiz->hijos)){
+                tNodo raizVieja=n;
+                tNodo raizNueva=l_recuperar(n->hijos,l_primera(raizVieja->hijos));
+                raizNueva->padre=POS_NULA;
+                a->raiz=raizNueva;
             }
             else
-                if(cantDeN>1)
+                 if(l_primera(a->raiz->hijos)!=l_fin(a->raiz->hijos))
                     exit(ARB_OPERACION_INVALIDA);
          }
          else
@@ -145,10 +138,10 @@ Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
                       posHijosN=l_siguiente(hijosN,posHijosN);
                       posHermanosN=l_siguiente(hermanosN,posHermanosN);
                    }
-                   l_eliminar(hermanosN,posHermanosN,eliminar_nodo);
+                   l_eliminar(hermanosN,posHermanosN,fEliminar);
             }
     fEliminar(n->elemento);
-    l_destruir(&hijosN,eliminar_nodo);
+    l_destruir(&hijosN,fEliminar);
     n->hijos=NULL;
     n->padre=NULL;
     n->elemento=NULL;
@@ -169,7 +162,7 @@ Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
         (*a)=NULL;
 }
 /**
- Destruye arbol recursisavemente 
+ Destruye arbol recursisavemente
 */
 void destruirAux(tArbol a,tNodo n ,void (*fEliminar)(tElemento)){
     tPosicion pos=l_primera(n->hijos);
@@ -185,9 +178,15 @@ Recupera y retorna el elemento del nodo N.
 */
  tElemento a_recuperar(tArbol a, tNodo n)
 {
-    if (n==NULL)
+    if (a==POS_NULA)
+    {
         exit(ARB_ERROR_MEMORIA);
-     return n->elemento;
+    }
+    else if (n==POS_NULA)
+         {
+             exit(ARB_ERROR_MEMORIA);
+         }
+    return n->elemento;
 }
 
 /**
@@ -211,7 +210,7 @@ extern tNodo a_raiz(tArbol a)
  El nuevo �rbol en *SA se compone de los nodos del sub�rbol de A a partir de N.
  El subarbol de A a partir de N debe ser eliminado de A.
 **/
- void a_sub_arbol(tArbol a, tNodo n, tArbol * sa)
+/*void a_sub_arbol(tArbol a, tNodo n, tArbol * sa)
 {
                     tLista listaDeHermanos ;
                     tPosicion pos,fin;
@@ -231,10 +230,10 @@ extern tNodo a_raiz(tArbol a)
                             exit(ARB_POSICION_INVALIDA);
                       }
                       else
-                          l_eliminar(listaDeHermanos,pos,eliminar_nodo);
+                          l_eliminar(listaDeHermanos,pos,fEliminar);
                           n->padre=NULL;
 
 
                    }
 
-}
+}*/

@@ -19,23 +19,23 @@
 	"lista.h"
 	"arbol.h"
 
-1572820370 source:d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\lista.c
+1574204046 source:d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\lista.c
 	<stdio.h>
 	<stdlib.h>
 	"lista.h"
 
-1571404719 d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\lista.h
+1574203903 d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\lista.h
 
-1572971196 source:d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\arbol.c
+1574207212 source:d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\arbol.c
 	<stdio.h>
 	<stdlib.h>
 	"arbol.h"
 	"lista.h"
 
-1571404702 d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\arbol.h
+1574203903 d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\arbol.h
 	"lista.h"
 
-1572969573 source:d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\pruebalista.c
+1574207447 source:d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr-1\pruebalista.c
 	<stdio.h>
 	<stdlib.h>
 	"lista.h"
