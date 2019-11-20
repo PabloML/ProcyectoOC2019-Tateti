@@ -103,7 +103,7 @@ int main()
     printf("La raiz es: %i\n",entero->entero);
     tEntero segundo=(tEntero)malloc(sizeof(struct entero));
     segundo->entero=3;
-    a_insertar(a,a_raiz(a),POS_NULA,segundo);
+    a_insertar(a,a_raiz(a),(tNodo)p,segundo);
     entero=a_recuperar(a,a_raiz(a));
     printf("La raiz es: %i\n",entero->entero);
     tPosicion pos=l_recuperar(a_raiz(a)->hijos,l_primera(a_raiz(a)->hijos));
@@ -114,7 +114,7 @@ int main()
     posi=l_recuperar(a_raiz(a)->hijos,posi);
     en=posi->elemento;
     printf("El segundo hijo de la raiz es %i\n",en->entero);
-    a_eliminar(a,a_raiz(a),&eliminarElemento);
+    a_eliminar(a,(tNodo) pos,&eliminarElemento);
     /*tEntero tercero=(tEntero)malloc(sizeof(struct entero));
     segundo->entero=4;
     a_insertar(a,(tNodo)pos,POS_NULA,tercero);
