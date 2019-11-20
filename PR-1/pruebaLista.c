@@ -19,9 +19,19 @@ void eliminarElemento (tElemento e)
     free((tEntero)e);
 }
 
+tPosicion recPosicion(tLista l,tNodo n)
+{
+    tPosicion p=l_primera(l);
+    while (p!=l_ultima(l) && l_recuperar(l,p)!=n)
+    {
+        p=l_siguiente(l,p);
+    }
+    return p;
+}
+
 int main()
 {
-    /*tLista l;
+   /*tLista l;
     crear_lista(&l);
     printf("Ingrese los numeros que quiera terminando la serie con 0 : \n");
     tEntero e=(tEntero)malloc(sizeof(struct entero));
@@ -83,26 +93,29 @@ int main()
     crear_raiz(a,e);
     tEntero entero=a_recuperar(a,a_raiz(a));
     printf("La raiz es: %i\n",entero->entero);
-
     tEntero primero=(tEntero)malloc(sizeof(struct entero));
     primero->entero=2;
     a_insertar(a,a_raiz(a),POS_NULA,primero);
     tPosicion p=l_recuperar(a_raiz(a)->hijos,l_primera(a_raiz(a)->hijos));
     tEntero en=p->elemento;
     printf("El hijo de la raiz es: %i\n",en->entero);
-    a_eliminar(a,a_raiz(a),&eliminarElemento);
     entero=a_recuperar(a,a_raiz(a));
     printf("La raiz es: %i\n",entero->entero);
-    /*int i=en->entero;
-    printf("%i\n",i);
     tEntero segundo=(tEntero)malloc(sizeof(struct entero));
     segundo->entero=3;
     a_insertar(a,a_raiz(a),POS_NULA,segundo);
+    entero=a_recuperar(a,a_raiz(a));
+    printf("La raiz es: %i\n",entero->entero);
     tPosicion pos=l_recuperar(a_raiz(a)->hijos,l_primera(a_raiz(a)->hijos));
-    tEntero ent=pos->elemento;
-    int in=ent->entero;
-    printf("%i\n",in);
-    tEntero tercero=(tEntero)malloc(sizeof(struct entero));
+    en=pos->elemento;
+    printf("El primer hijo de la raiz es %i\n",en->entero);
+    tPosicion posi=recPosicion(a_raiz(a)->hijos,(tNodo) pos);
+    posi=l_siguiente(a_raiz(a)->hijos,posi);
+    posi=l_recuperar(a_raiz(a)->hijos,posi);
+    en=posi->elemento;
+    printf("El segundo hijo de la raiz es %i\n",en->entero);
+    a_eliminar(a,a_raiz(a),&eliminarElemento);
+    /*tEntero tercero=(tEntero)malloc(sizeof(struct entero));
     segundo->entero=4;
     a_insertar(a,(tNodo)pos,POS_NULA,tercero);
     tPosicion posi=l_recuperar(((tNodo)pos)->hijos,l_primera(a_raiz(a)->hijos));

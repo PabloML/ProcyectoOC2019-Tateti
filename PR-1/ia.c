@@ -4,28 +4,25 @@
 #include "ia.h"
 #include "partida.h"
 
-//Prototipos de funciones auxiliares.
+// Prototipos de funciones auxiliares.
 static void ejecutar_min_max(tBusquedaAdversaria b);
 static void crear_sucesores_min_max(tArbol a, tNodo n, int es_max, int alpha, int beta, int jugador_max, int jugador_min);
 static int valor_utilidad(tEstado e, int jugador_max);
 static tLista estados_sucesores(tEstado e, int ficha_jugador);
 static void diferencia_estados(tEstado anterior, tEstado nuevo, int * x, int * y);
 static tEstado clonar_estado(tEstado e);
-/**
-    un eliminar que se usa como parametro .l_eliminar para simular un feliminar original que no hace nd.
-**/
-void noElimina(void  *e){    }
-    /**
-        un eliminar que se  utiliza en eliminar de arbol o lista, liberando el espacio en memoria del elemento(estado)
-    **/
+
+int minimo(int x,int y);
+int maximo(int x,int y);
+
+void noEliminaEstado(void *e){    }
+
 void eliminarEstado(void *e){
     tEstado estado= (tEstado) e;
     free(estado);
 }
-    /**
-        Determina max entre x e y ;para luego retornarlo.
-    **/
-int max(int x, int y) {
+
+int maximo(int x, int y) {
    int salida;
    if (x > y)
       salida = x;
@@ -34,10 +31,8 @@ int max(int x, int y) {
    return salida;
 }
 
- /**
-        Determina min entre x e y ;para luego retornarlo.
-    **/
-int min(int x, int y) {
+
+int minimo(int x, int y) {
    int salida;
    if (x > y)
       salida = y;
@@ -80,13 +75,7 @@ void crear_busqueda_adversaria(tBusquedaAdversaria * b, tPartida p){
     // Ejecuta algoritmo Min-Max con podas Alpha-Beta.
     ejecutar_min_max((*b));
 }
-/**
- Computa y retorna el pr�ximo movimiento a realizar por el jugador MAX.
- Para esto, se tiene en cuenta el �rbol creado por el algoritmo de b�squeda adversaria Min-max con podas Alpha-Beta.
- Siempre que sea posible, se indicar� un movimiento que permita que MAX gane la partida.
- Si no existe un movimiento ganador para MAX, se indicar� un movimiento que permita que MAX empate la partida.
- En caso contrario, se indicar� un movimiento que lleva a MAX a perder la partida.
-**/
+
 void proximo_movimiento(tBusquedaAdversaria b, int * x, int * y){
     tArbol arbol;
     tNodo raiz;
@@ -117,7 +106,7 @@ void proximo_movimiento(tBusquedaAdversaria b, int * x, int * y){
         corte=valoraux==utilidad;
         pos= l_siguiente(hijosRaiz, pos);
     }
-    diferencia_estados(eactual, eaux, x,y);
+    diferencia_estados(eactual, eaux,x,y);
 }
 
 /**
@@ -129,23 +118,20 @@ void destruir_busqueda_adversaria(tBusquedaAdversaria * b){
     a_destruir(&((*b)->arbol_busqueda), &eliminarEstado);
 }
 
-// ===============================================================================================================
-// FUNCIONES Y PROCEDEMIENTOS AUXILIARES
-// ===============================================================================================================
-
 /**
 Ordena la ejecuci�n del algoritmo Min-Max para la generaci�n del �rbol de b�squeda adversaria, considerando como
 estado inicial el estado de la partida almacenado en el �rbol almacenado en B.
 **/
 static void ejecutar_min_max(tBusquedaAdversaria b){
-    tArbol AB= b->arbol_busqueda;
-    tNodo raizAB = a_raiz(AB);
-    int jMax = b->jugador_max;
-    int jMin = b->jugador_min;
-    crear_sucesores_min_max(AB, raizAB, 1, IA_INFINITO_NEG, IA_INFINITO_POS, jMax, jMin);
+    tArbol a = b->arbol_busqueda;
+    tNodo r = a_raiz(a);
+    int jugador_max = b->jugador_max;
+    int jugador_min = b->jugador_min;
+    crear_sucesores_min_max(a, r, 1, IA_INFINITO_NEG, IA_INFINITO_POS, jugador_max, jugador_min);
 }
 
 /**
+>>>>>  A IMPLEMENTAR   <<<<<
 Implementa la estrategia del algoritmo Min-Max con podas Alpha-Beta, a partir del estado almacenado en N.
 - A referencia al �rbol de b�squeda adversaria.
 - N referencia al nodo a partir del cual se construye el sub�rbol de b�squeda adversaria.
@@ -154,16 +140,20 @@ Implementa la estrategia del algoritmo Min-Max con podas Alpha-Beta, a partir de
 - JUGADOR_MAX y JUGADOR_MIN indican las fichas con las que juegan los respectivos jugadores.
 **/
 static void crear_sucesores_min_max(tArbol a, tNodo n, int es_max, int alpha, int beta, int jugador_max, int jugador_min){
+    tEstado estado;
     tEstado estadoSucesor;
     int mejor_valor_sucesores;
+    int valorSucesor;
+    int seguir;
+    int utilidad_n;
     tLista sucesores;
     tNodo hijoSucesor;
     tPosicion pos;
 
-    int seguir=1;
-    int valorSucesor=0;
-    tEstado estado=(tEstado)a_recuperar(a, n);
-    int utilidad_n = valor_utilidad(estado, jugador_max);
+    seguir=1;
+    valorSucesor=0;
+    estado=(tEstado)a_recuperar(a, n);
+    utilidad_n = valor_utilidad(estado, jugador_max);
 
     if(utilidad_n==IA_NO_TERMINO){
         if(es_max==1){
@@ -173,11 +163,11 @@ static void crear_sucesores_min_max(tArbol a, tNodo n, int es_max, int alpha, in
             while(pos!=l_fin(sucesores) && seguir){
                 estadoSucesor= (tEstado)l_recuperar(sucesores, pos);
                 hijoSucesor=a_insertar(a, n, NULL, estadoSucesor);
-                l_eliminar(sucesores, pos,&noElimina);
+                l_eliminar(sucesores, pos,&noEliminaEstado);
                 crear_sucesores_min_max(a, hijoSucesor, !es_max, alpha, beta, jugador_max, jugador_min);
                 valorSucesor=estadoSucesor->utilidad;
-                mejor_valor_sucesores= max(mejor_valor_sucesores, valorSucesor);
-                alpha= max(alpha, mejor_valor_sucesores);
+                mejor_valor_sucesores= maximo(mejor_valor_sucesores, valorSucesor);
+                alpha= maximo(alpha, mejor_valor_sucesores);
                 if(beta<=alpha)
                     seguir=0;
             }
@@ -188,11 +178,11 @@ static void crear_sucesores_min_max(tArbol a, tNodo n, int es_max, int alpha, in
             while(pos!=l_fin(sucesores) && seguir){
                 estadoSucesor= (tEstado)l_recuperar(sucesores, pos);
                 hijoSucesor=a_insertar(a, n, NULL, estadoSucesor);
-                l_eliminar(sucesores, pos,&noElimina);
+                l_eliminar(sucesores, pos,&noEliminaEstado);
                 crear_sucesores_min_max(a, hijoSucesor, !es_max, alpha, beta, jugador_max, jugador_min);
                 valorSucesor=estadoSucesor->utilidad;
-                mejor_valor_sucesores= min(mejor_valor_sucesores, valorSucesor);
-                beta= min(beta, mejor_valor_sucesores);
+                mejor_valor_sucesores= minimo(mejor_valor_sucesores, valorSucesor);
+                beta= minimo(beta, mejor_valor_sucesores);
                 if(beta<=alpha)
                     seguir=0;
             }
@@ -208,18 +198,19 @@ static void crear_sucesores_min_max(tArbol a, tNodo n, int es_max, int alpha, in
 Devuelve una posicion de la lista de forma aleatoria, puede ser l_primera(l), l_ultima(l) o l_fin(l)
 **/
 tPosicion posicionAleatoria(tLista lista){
-    tPosicion salida;
-    int numero= rand()%3;
+    tPosicion toReturn;
 
+    toReturn=NULL;
+    int numero= rand()%3;
     if(numero==0)
-        salida=l_primera(lista);
+        toReturn=l_primera(lista);
         else
             if(numero==1)
-                salida=l_ultima(lista);
+                toReturn=l_ultima(lista);
             else
                 if(numero==2)
-                    salida=l_fin(lista);
-    return salida;
+                    toReturn=l_fin(lista);
+    return toReturn;
 }
 /**
 >>>>>  A IMPLEMENTAR   <<<<<
@@ -230,18 +221,19 @@ Computa el valor de utilidad correspondiente al estado E, y la ficha correspondi
 - IA_NO_TERMINO en caso contrario.
 **/
 static int valor_utilidad(tEstado e, int jugador_max){
-    int ficha = -10;
-    if(e->grilla[0][0]!=PART_SIN_MOVIMIENTO){
+    int ficha = -3;
+    int i, j;
+     if(e->grilla[0][0]!=PART_SIN_MOVIMIENTO){
         if(e->grilla[0][0]==e->grilla[0][1] && e->grilla[0][0] == e->grilla[0][2])
-            ficha= e->grilla[0][0];
+                    ficha= e->grilla[0][0];
         else
-            if(e->grilla[0][0]==e->grilla[1][0] && e->grilla[0][0]==e->grilla[2][0])
-                ficha= e->grilla [0][0];
+           if(e->grilla[0][0]==e->grilla[1][0] && e->grilla[0][0]==e->grilla[2][0])
+                    ficha= e->grilla [0][0];
             else
                 if(e->grilla[1][1]==e->grilla[0][0] && e->grilla[2][2]==e->grilla[0][0])
                     ficha= e->grilla[0][0];
     }
-    if(ficha==-10) {
+    if(ficha==-3) {
         if(e->grilla[1][1]!=PART_SIN_MOVIMIENTO){
             if(e->grilla[1][1]==e->grilla[0][1] && e->grilla[1][1]==e->grilla[2][1])
                 ficha= e->grilla[1][1];
@@ -253,7 +245,7 @@ static int valor_utilidad(tEstado e, int jugador_max){
                         ficha= e->grilla [1][1];
         }
     }
-    if(ficha==-10) {
+    if(ficha==-3) {
         if(e->grilla[2][2]!=PART_SIN_MOVIMIENTO) {
             if(e->grilla[2][2]==e->grilla[2][1] && e->grilla[2][2]==e->grilla[2][0])
                 ficha= e->grilla[2][2];
@@ -263,11 +255,11 @@ static int valor_utilidad(tEstado e, int jugador_max){
         }
     }
 
-    if(ficha == -10) {
-            for(int i=0; i<3; i++)
-                for(int j=0; j<3; j++)
-                    if(e->grilla[i][j]==PART_SIN_MOVIMIENTO)
-                        return IA_NO_TERMINO;
+    if(ficha == -3) {
+       for(i=0; i<3; i++)
+                    for(j=0; j<3; j++)
+                        if(e->grilla[i][j]==PART_SIN_MOVIMIENTO)
+                            return IA_NO_TERMINO;
                 return IA_EMPATA_MAX;
     }
     else
@@ -290,15 +282,16 @@ estados_sucesores(estado, ficha) retornar�a dos listas L1 y L2 tal que:
 **/
 static tLista estados_sucesores(tEstado e, int ficha_jugador){
     tLista lista;
-    tEstado clon;
+    int i,j;
+    tEstado clone;
 
     crear_lista(&lista);
-    for(int i=0;i<3;i++){
-        for(int j=0;j<3;j++){
+    for(i=0;i<3;i++){
+        for(j=0;j<3;j++){
             if(e->grilla[i][j]==PART_SIN_MOVIMIENTO){
-                clon=clonar_estado(e);
-                clon->grilla[i][j]=ficha_jugador;
-                l_insertar(lista, posicionAleatoria(lista), clon);
+                clone=clonar_estado(e);
+                clone->grilla[i][j]=ficha_jugador;
+                l_insertar(lista, posicionAleatoria(lista), clone);
             }
         }
     }
@@ -327,14 +320,15 @@ Se asume que entre ambos existe s�lo una posici�n en el que la ficha del est
 La posici�n en la que los estados difiere, es retornada en los par�metros *X e *Y.
 **/
 static void diferencia_estados(tEstado anterior, tEstado nuevo, int * x, int * y){
-   int  encontrado = 0;
-    for(int i=0; i<3 && !encontrado; i++){
-        for(int j=0; j<3 && !encontrado; j++){
+    int i,j, hallado = 0;
+    for(i=0; i<3 && !hallado; i++){
+        for(j=0; j<3 && !hallado; j++){
             if (anterior->grilla[i][j] != nuevo->grilla[i][j]){
                 *x = i;
                 *y = j;
-                encontrado = 1;
+                hallado = 1;
             }
         }
     }
 }
+

@@ -3,130 +3,135 @@
  * @author Pablo Lencina, Adrian Flores
  */
 
-#include "partida.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+
+#include "partida.h"
+
+#define PART_JUGADOR_1                      100
+#define PART_JUGADOR_2                      101
+#define PART_JUGADOR_RANDOM                 102
+
+#define PART_MODO_USUARIO_VS_USUARIO        103
+#define PART_MODO_USUARIO_VS_AGENTE_IA      104
+#define PART_MODO_AGENTE_IA_VS_AGENTE_IA    105
+
+#define PART_MOVIMIENTO_OK                  106
+#define PART_MOVIMIENTO_ERROR               107
+#define PART_SIN_MOVIMIENTO                 108
+#define PART_GANA_JUGADOR_1                 109
+#define PART_GANA_JUGADOR_2                 110
+#define PART_EN_JUEGO                       111
+#define PART_EMPATE                         112
+
+#define PART_ERROR_MEMORIA                  113
+
+void controlGanador(tPartida p,int turno_De);
 
 /**
 Inicializa una nueva partida, indicando:
  - Modo de partida (Usuario vs. Usuario o Usuario vs. Agente IA).
- - Jugador que comienza la partida (Jugador 1, Jugador 2, o elecci�n al azar).
+ - Jugador que comienza la partida (Jugador 1, Jugador 2, o elección al azar).
  - Nombre que representa al Jugador 1.
  - Nombre que representa al Jugador 2.
 **/
-void nueva_partida(tPartida * p, int modo_partida, int comienza, char * j1_nombre, char * j2_nombre){
-
-    (*p)=malloc(sizeof(struct partida));
+extern void nueva_partida(tPartida * p, int modo_partida, int comienza, char * j1_nombre, char * j2_nombre){
+    (*p)=(tPartida)malloc(sizeof(struct partida));
     (*p)->modo_partida=modo_partida;
-
-    if(comienza==PART_JUGADOR_RANDOM)
-        comienza=jugadorRamdom();
-
+    (*p)->estado=111;
     (*p)->turno_de=comienza;
-    (*p)->tablero=malloc(sizeof(struct tablero));
-
-    for(int i=0;i<3;i++){
-        for(int j=0;j<3;j++){
-            ((*p)->tablero)->grilla[i][j]=PART_SIN_MOVIMIENTO;
-        }
-    }
-    strcpy((*p)->nombre_jugador_1, j1_nombre);
-    strcpy((*p)->nombre_jugador_2, j2_nombre);
-
-    (*p)->estado=PART_EN_JUEGO;
+     (*p)->tablero=(tTablero)malloc(sizeof(struct tablero));
+     for(int k=0;k<=2;k++)
+        for(int h=0;h<=2;h++)
+            (*p)->tablero->grilla[k][h]=0;
+     for(int i=0;i<50;i++)
+       (*p)->nombre_jugador_1[i]=*(j1_nombre+i);
+     for(int j=0;j<50;j++)
+       (*p)->nombre_jugador_2[j]=*(j2_nombre+j);
 }
-
-int controlGanador(tTablero tablero){
-    int ocupa = -1;
-
-        if(tablero->grilla[0][0]==tablero->grilla[0][1] && tablero->grilla[0][0] == tablero->grilla[0][2])
-                    ocupa= tablero->grilla[0][0];
-        else
-           if(tablero->grilla[0][0]==tablero->grilla[1][0] && tablero->grilla[0][0]==tablero->grilla[2][0])
-                    ocupa= tablero->grilla [0][0];
-            else
-                if(tablero->grilla[1][1]==tablero->grilla[0][0] && tablero->grilla[2][2]==tablero->grilla[0][0])
-                    ocupa= tablero->grilla[0][0];
-                else
-                    if(tablero->grilla[1][1]==tablero->grilla[0][1] && tablero->grilla[1][1]==tablero->grilla[2][1])
-                        ocupa= tablero->grilla[1][1];
+/**
+Actualiza, si corresponde, el estado de la partida considerando que el jugador al que le corresponde jugar, decide hacerlo en la posición indicada (X,Y).
+En caso de que el movimiento a dicha posición sea posible, retorna PART_MOVIMIENTO_OK; en caso contrario, retorna PART_MOVIMIENTO_ERROR.
+Las posiciones (X,Y) deben corresponderse al rango [0-2]; X representa el número de fila, mientras Y el número de columna.
+**/
+extern int nuevo_movimiento(tPartida p, int mov_x, int mov_y){
+    int valido=0;
+        for(int i=0;i<=2;i++){
+            for(int j=0;j<=2;j++)
+                if(i==mov_x && j==mov_y && (p->tablero->grilla[i][j]==0)){
+                    valido=1;
+                    p->tablero->grilla[i][j]=p->turno_de;
+                    if(p->turno_de == 100)
+                        printf(" X |");
                     else
-                        if(tablero->grilla[1][1]==tablero->grilla[1][0] && tablero->grilla[1][1]==tablero->grilla[1][2])
-                            ocupa = tablero->grilla[1][1];
+                        printf(" O |");
+                }
+                else{
+                    if(p->tablero->grilla[i][j]==100)
+                        printf(" X |");
+                    else
+                        if(p->tablero->grilla[i][j]==101)
+                            printf(" O |");
                         else
-                            if(tablero->grilla[1][1]==tablero->grilla[0][2] && tablero->grilla[1][1]==tablero->grilla[2][0])
-                                ocupa= tablero->grilla [1][1];
-                            else
-                                if(tablero->grilla[2][2]==tablero->grilla[2][1] && tablero->grilla[2][2]==tablero->grilla[2][0])
-                                    ocupa= tablero->grilla[2][2];
-                                else
-                                    if(tablero->grilla[2][2]==tablero->grilla[1][2] && tablero->grilla[2][2]==tablero->grilla[0][2])
-                                        ocupa= tablero->grilla[2][2];
+                            printf("   |");
+                }
+           if(i!=2)
+                printf("\n --------- \n");
+        }
+        printf("\n");
 
 
-    if(ocupa == -1) {
-       for(int i=0; i<3; i++)
-                    for(int j=0; j<3; j++)
-                        if(tablero->grilla[i][j]==PART_SIN_MOVIMIENTO)
-                            return PART_EN_JUEGO;
-        return PART_EMPATE;
+    if(valido==1){
+        controlGanador(p,p->turno_de);
+        if(p->turno_de==100)
+            p->turno_de=101;
+        else
+            p->turno_de=100;
+
+        return (PART_MOVIMIENTO_OK);
     }
     else
-        return ocupa;
+        return (PART_MOVIMIENTO_ERROR);
+
 }
-
-/**
-Actualiza, si corresponde, el estado de la partida considerando que el jugador al que le corresponde jugar, decide hacerlo en la posici�n indicada (X,Y).
-En caso de que el movimiento a dicha posici�n sea posible, retorna PART_MOVIMIENTO_OK; en caso contrario, retorna PART_MOVIMIENTO_ERROR.
-Las posiciones (X,Y) deben corresponderse al rango [0-2]; X representa el n�mero de fila, mientras Y el n�mero de columna.
-**/
-int nuevo_movimiento(tPartida p, int mov_x, int mov_y){
-    int salida;
-    if((p->tablero)->grilla[mov_x][mov_y]!=PART_SIN_MOVIMIENTO)
-        salida=PART_MOVIMIENTO_ERROR;
-    else{
-        (p->tablero)->grilla[mov_x][mov_y]=p->turno_de;
-        salida=PART_MOVIMIENTO_OK;
-
-        if(p->turno_de==PART_JUGADOR_1)
-            p->turno_de=PART_JUGADOR_2;
-        else
-            if(p->turno_de==PART_JUGADOR_2)
-                p->turno_de=PART_JUGADOR_1;
-
-
-        if(controlGanador(p->tablero)==PART_EMPATE)
-            p->estado=PART_EMPATE;
-        else
-            if(controlGanador(p->tablero)==PART_JUGADOR_1)
-                p->estado=PART_GANA_JUGADOR_1;
-            else
-                if(controlGanador(p->tablero)==PART_JUGADOR_2)
-                    p->estado=PART_GANA_JUGADOR_2;
-
-    }
-    return salida;
-}
-
 /**
 Finaliza la partida referenciada por P, liberando toda la memoria utilizada.
 **/
-void finalizar_partida(tPartida * p){
-    free((*p)->tablero);
-    free(*p);
+extern void finalizar_partida(tPartida * p){
+   tPartida partida=(*p);
+    free(partida->estado);
+    free(partida->modo_partida);
+    free(partida->nombre_jugador_1);
+    free(partida->nombre_jugador_2);
+    free(partida->tablero->grilla);
+    free(partida->tablero);
+    free(partida->turno_de);
+    free(p);
 }
 
-/**
-Determina aleatoriamente que jugador iniciara la partida si se selecciona la opcion PART_JUGADOR_RANDOM
-**/
-int jugadorRamdom(){
-    int jugador;
-    int num= rand()%2;
-    if(num==0)
-        jugador=PART_JUGADOR_1;
+void controlGanador(tPartida p,int turno_De){
+ int hayGanador=0;
+ if((p->tablero->grilla[0][0]==turno_De)&&(p->tablero->grilla[0][1]==turno_De)&&(turno_De==p->tablero->grilla[0][2]))
+    hayGanador=1;
+ else
+    if((p->tablero->grilla[0][2]==turno_De)&&(turno_De==p->tablero->grilla[1][2])&&(turno_De==p->tablero->grilla[2][2]))
+            hayGanador=1;
     else
-        jugador=PART_JUGADOR_2;
+        if((p->tablero->grilla[2][2]==turno_De)&&(p->tablero->grilla[2][1]==turno_De)&&(p->tablero->grilla[2][0]==turno_De))
+            hayGanador=1;
+        else
+            if((p->tablero->grilla[2][0]==turno_De)&&(p->tablero->grilla[1][0]==turno_De)&&(p->tablero->grilla[0][0]==turno_De))
+                hayGanador=1;
+            else
+                if((p->tablero->grilla[0][0]==turno_De)&&(p->tablero->grilla[1][1]==turno_De)&&(p->tablero->grilla[2][2]==turno_De))
+                    hayGanador=1;
+                else
+                    if((p->tablero->grilla[0][2]==turno_De)&&(p->tablero->grilla[1][1]==turno_De)&&(turno_De==p->tablero->grilla[2][0]))
+                        hayGanador=1;
 
-    return jugador;
+ if(hayGanador==1)
+    if(turno_De==100)
+        p->estado=109;
+     else
+        p->estado=110;
 }

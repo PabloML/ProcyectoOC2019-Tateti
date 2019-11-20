@@ -14,49 +14,75 @@
 #define POS_NULA NULL
 #define ELE_NULO NULL
 
-void destruirAux(tArbol a,tNodo n ,void (*fEliminar)(tElemento));
-
 /**
 Inicializa un �rbol vac�o.
 Una referencia al �rbol creado es referenciado en *A.
 **/
 extern void crear_arbol(tArbol * a)
 {
-
-            (*a)=(struct arbol*)malloc(sizeof(struct arbol));
-             if ((*a)==NULL)
-                 exit(ARB_ERROR_MEMORIA);
-
-            (*a)->raiz=NULL;
-
-
+    if (a==POS_NULA)
+    {
+        exit(ARB_ERROR_MEMORIA);
+    }
+    else {
+            (*a)=(tArbol)malloc(sizeof(struct arbol));
+             if ((*a)!=POS_NULA)
+             {
+                (*a)->raiz=POS_NULA;
+             }
+             else exit(ARB_ERROR_MEMORIA);
+         }
 }
 
 /**
 Crea la ra�z de A.
 Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
 **/
- void crear_raiz(tArbol a, tElemento e)
+extern void crear_raiz(tArbol a, tElemento e)
 {
-
-     if (a->raiz!=NULL)
+    if (a==POS_NULA)
+    {
+        exit(ARB_ERROR_MEMORIA);
+    }
+    else if (a->raiz!=POS_NULA)
          {
              exit(ARB_OPERACION_INVALIDA);
          }
-        tNodo futuraRaiz=(tNodo)malloc(sizeof(struct nodo));
-
-                 if (futuraRaiz==NULL || futuraRaiz==0)
-                        exit(ARB_ERROR_MEMORIA);
-                 else
-                    {
-                     crear_lista(&(futuraRaiz->hijos));
-                     futuraRaiz->padre=NULL;
-                     futuraRaiz->elemento=e;
-                      a->raiz=futuraRaiz;
-                    }
-
+         else {
+                 a->raiz=(tNodo)malloc(sizeof(struct nodo));
+                 if (a->raiz!=POS_NULA)
+                 {
+                     a->raiz->elemento=e;
+                     tLista l;
+                     crear_lista(&l);
+                     a->raiz->hijos=l;
+                     a->raiz->padre=POS_NULA;
+                 }
+                 else exit(ARB_ERROR_MEMORIA);
+              }
 }
-
+int perteneceAlArbol(tArbol a, tNodo n)
+{
+    int res=1;
+    while (n!=(a->raiz) && (n->padre)!=a->raiz && n->padre!=POS_NULA && n!=POS_NULA)
+    {
+       n=n->padre;
+    }
+    if (n!=(a->raiz) && (n->padre)!=a->raiz && (n==POS_NULA || n->padre==POS_NULA))
+    {
+       res=0;
+    }
+    return res;
+}
+tPosicion recuperarPosicion(tLista l,tNodo n)
+{
+    tPosicion p=l_primera(l);
+    while (p!=l_ultima(l) && l_recuperar(l,p)!=n)
+    {
+        p=l_siguiente(l,p);
+    }
+    return p;
+}
 /**
  Inserta y retorna un nuevo nodo en A.
  El nuevo nodo se agrega en A como hijo de NP, hermano izquierdo de NH, y cuyo r�tulo es E.
@@ -64,34 +90,53 @@ Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
  Si NH no corresponde a un nodo hijo de NP, finaliza indicando ARB_POSICION_INVALIDA.
  NP direcciona al nodo padre, mientras NH al nodo hermano derecho del nuevo nodo a insertar.
 **/
- tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e)
+extern tNodo a_insertar(tArbol a, tNodo np, tNodo nh, tElemento e)
 {
-
-        if (np==NULL)
-                exit(ARB_POSICION_INVALIDA);
-
-        tLista hermanosNUEVO=np->hijos;
-        tNodo nuevoHijo=(tNodo)malloc(sizeof(struct nodo));
-        if(nuevoHijo==NULL || nuevoHijo==0)
-                exit(ARB_ERROR_MEMORIA);
-        crear_lista(&(nuevoHijo->hijos));
-        nuevoHijo->elemento=e;
-        nuevoHijo->padre=np;
-        tPosicion posHermanosNUEVO=l_primera(hermanosNUEVO);
-        tPosicion finHermanosNUEVO=l_fin(hermanosNUEVO);
-        if(nh!=NULL){
-                while(posHermanosNUEVO!=finHermanosNUEVO && l_recuperar(hermanosNUEVO,posHermanosNUEVO))
-                        posHermanosNUEVO=l_siguiente(hermanosNUEVO,posHermanosNUEVO);
-                if(posHermanosNUEVO==finHermanosNUEVO)
-                           exit(ARB_POSICION_INVALIDA);
-                }
-                else{
-                    posHermanosNUEVO=l_fin(hermanosNUEVO);
-
-                }
-                l_insertar(hermanosNUEVO,posHermanosNUEVO,nuevoHijo);
-             return nuevoHijo;
-
+    tNodo nodo=POS_NULA;
+    if (a==POS_NULA)
+    {
+        exit(ARB_ERROR_MEMORIA);
+    }
+    else if (perteneceAlArbol(a,np)==0)
+            {
+               exit(ARB_POSICION_INVALIDA);
+            }
+         else if (np==POS_NULA)
+              {
+                 exit(ARB_POSICION_INVALIDA);
+              }
+              else if (nh==POS_NULA)
+                   {
+                       nodo=(tNodo)malloc(sizeof(struct nodo));
+                       if (nodo!=POS_NULA)
+                       {
+                           nodo->elemento=e;
+                           tLista l;
+                           crear_lista(&l);
+                           nodo->hijos=l;
+                           nodo->padre=np;
+                           l_insertar(np->hijos,l_primera(np->hijos),nodo);
+                        }
+                        else exit(ARB_ERROR_MEMORIA);
+                   }
+                   else if (nh->padre!=np)
+                        {
+                            exit(ARB_POSICION_INVALIDA);
+                        }
+                        else {
+                                nodo=(tNodo)malloc(sizeof(struct nodo));
+                                if (nodo!=POS_NULA)
+                                {
+                                    nodo->elemento=e;
+                                    tLista l;
+                                    crear_lista(&l);
+                                    nodo->hijos=l;
+                                    nodo->padre=np;
+                                    l_insertar(np->hijos,recuperarPosicion(np->hijos,nh),nodo);
+                                }
+                                else exit(ARB_ERROR_MEMORIA);
+                              }
+    return nodo;
 }
 
 /**
@@ -100,7 +145,7 @@ Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
  Si N es la ra�z de A, y a su vez tiene m�s de un hijo, finaliza retornando ARB_OPERACION_INVALIDA.
  Si N no es la ra�z de A y tiene hijos, estos pasan a ser hijos del padre de N, en el mismo orden y a partir de la posici�n que ocupa N en la lista de hijos de su padre.
 **/
- void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
+extern void a_eliminar(tArbol a, tNodo n, void (*fEliminar)(tElemento))
 {
     tLista hijosN=n->hijos;
     if (a==POS_NULA)
@@ -118,6 +163,7 @@ Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
             else
                  if(l_primera(a->raiz->hijos)!=l_fin(a->raiz->hijos))
                     exit(ARB_OPERACION_INVALIDA);
+
          }
          else
            {
@@ -130,7 +176,7 @@ Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
                   while(posHermanosN!=finHermanosN && l_recuperar(hermanosN,posHermanosN)!=n)
                       posHermanosN=l_siguiente(hermanosN,posHermanosN);
                   if(posHermanosN == finHermanosN)
-                      exit(ARB_POSICION_INVALIDA);
+                     exit(ARB_POSICION_INVALIDA);
                    while(posHijosN!=finHijosN){
                       tNodo nuevoHijoN=l_recuperar(hijosN,posHijosN);
                       nuevoHijoN->padre=padreN;
@@ -142,51 +188,47 @@ Si A no es vac�o, finaliza indicando ARB_OPERACION_INVALIDA.
             }
     fEliminar(n->elemento);
     l_destruir(&hijosN,fEliminar);
-    n->hijos=NULL;
     n->padre=NULL;
-    n->elemento=NULL;
     free(n);
-    n=NULL;
 }
 
 /**
  Destruye el �rbol A, elimininando cada uno de sus nodos.
  Los elementos almacenados en el �rbol son eliminados mediante la funci�n fEliminar parametrizada.
 **/
- void a_destruir(tArbol * a, void (*fEliminar)(tElemento))
+extern void a_destruir(tArbol * a, void (*fEliminar)(tElemento))
 {
-
-       destruirAux(*a,(*a)->raiz,fEliminar);
-        (*a)->raiz=NULL;
-        free(*a);
-        (*a)=NULL;
-}
-/**
- Destruye arbol recursisavemente
-*/
-void destruirAux(tArbol a,tNodo n ,void (*fEliminar)(tElemento)){
-    tPosicion pos=l_primera(n->hijos);
-    while(pos !=l_fin(n->hijos)){
-        destruirAux(a,l_recuperar(n->hijos,pos),fEliminar);
+    if (a!=POS_NULA)
+    {
+        tArbol arbol=(*a);
+        tPosicion p=l_primera(arbol->raiz->hijos);
+        while (p->siguiente!=POS_NULA)
+        {
+           a_eliminar(arbol,l_recuperar(arbol->raiz->hijos,p),fEliminar);
+           p=l_primera(arbol->raiz->hijos);
+        }
+        fEliminar(arbol->raiz->elemento);
+        l_destruir(&(arbol->raiz->hijos),fEliminar);
+        free(arbol->raiz);
+        free(arbol);
     }
-    a_eliminar(a,n,fEliminar);
 }
-
 
 /**
 Recupera y retorna el elemento del nodo N.
 */
- tElemento a_recuperar(tArbol a, tNodo n)
+extern tElemento a_recuperar(tArbol a, tNodo n)
 {
+    tElemento e=n->elemento;
     if (a==POS_NULA)
     {
         exit(ARB_ERROR_MEMORIA);
     }
-    else if (n==POS_NULA)
+    else if (perteneceAlArbol(a,n)==0)
          {
-             exit(ARB_ERROR_MEMORIA);
+            exit(ARB_POSICION_INVALIDA);
          }
-    return n->elemento;
+    return e;
 }
 
 /**
@@ -194,15 +236,28 @@ Recupera y retorna el nodo correspondiente a la ra�z de A.
 **/
 extern tNodo a_raiz(tArbol a)
 {
+    if (a==POS_NULA)
+    {
+         exit(ARB_ERROR_MEMORIA);
+    }
     return a->raiz;
 }
 
 /**
  Obtiene y retorna una lista con los nodos hijos de N en A.
 **/
- tLista a_hijos(tArbol a, tNodo n)
+extern tLista a_hijos(tArbol a, tNodo n)
 {
-        return n->hijos;
+    tLista l=n->hijos;
+    if (a==POS_NULA)
+    {
+       exit(ARB_ERROR_MEMORIA);
+    }
+    else if (perteneceAlArbol(a,n)==0)
+         {
+            exit(ARB_POSICION_INVALIDA);
+         }
+    return l;
 }
 
 /**
@@ -210,30 +265,34 @@ extern tNodo a_raiz(tArbol a)
  El nuevo �rbol en *SA se compone de los nodos del sub�rbol de A a partir de N.
  El subarbol de A a partir de N debe ser eliminado de A.
 **/
-/*void a_sub_arbol(tArbol a, tNodo n, tArbol * sa)
+extern void a_sub_arbol(tArbol a, tNodo n, tArbol * sa)
 {
-                    tLista listaDeHermanos ;
-                    tPosicion pos,fin;
-
-                    crear_arbol(sa);
-                    crear_raiz(*sa,n->elemento);
-                    (*sa)->raiz->hijos=n->hijos;
-
-                    if(n!=a->raiz){
-                      listaDeHermanos=n->padre->hijos;
-                      pos=l_primera(listaDeHermanos);
-                      fin=l_fin(listaDeHermanos);
-                      while(pos!=fin && l_recuperar(listaDeHermanos,pos)!=n){
-                          pos=l_siguiente(listaDeHermanos,pos);
-                      }
-                      if(pos!=fin){
-                            exit(ARB_POSICION_INVALIDA);
-                      }
-                      else
-                          l_eliminar(listaDeHermanos,pos,fEliminar);
-                          n->padre=NULL;
-
-
-                   }
-
-}*/
+  if (a==POS_NULA)
+   {
+       exit(ARB_ERROR_MEMORIA);
+   }
+   else if (n==POS_NULA)
+        {
+            exit(ARB_POSICION_INVALIDA);
+        }
+        else if (perteneceAlArbol(a,n)==0)
+             {
+                 exit(ARB_POSICION_INVALIDA);
+             }
+             else
+                 {
+                    tArbol arbol=(*sa);
+                    if (arbol==POS_NULA)
+                    {
+                        crear_arbol(sa);
+                    }
+                    tPosicion p=recuperarPosicion(n->padre->hijos,n);
+                    n->padre=POS_NULA;
+                    arbol->raiz=n;
+                    tPosicion siguiente=p->siguiente;
+                    p->siguiente=siguiente->siguiente;
+                    siguiente->siguiente=POS_NULA;
+                    siguiente->elemento=POS_NULA;
+                    free(siguiente);
+                 }
+}
