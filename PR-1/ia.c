@@ -264,8 +264,10 @@ static int valor_utilidad(tEstado e, int jugador_max){
     }
 
     if(ficha == -10) {
-            for(int i=0; i<3; i++)
-                for(int j=0; j<3; j++)
+            int i;
+            int j;
+            for(i=0; i<3; i++)
+                for(j=0; j<3; j++)
                     if(e->grilla[i][j]==PART_SIN_MOVIMIENTO)
                         return IA_NO_TERMINO;
                 return IA_EMPATA_MAX;
@@ -293,8 +295,10 @@ static tLista estados_sucesores(tEstado e, int ficha_jugador){
     tEstado clon;
 
     crear_lista(&lista);
-    for(int i=0;i<3;i++){
-        for(int j=0;j<3;j++){
+    int i;
+    int j;
+    for(i=0;i<3;i++){
+        for(j=0;j<3;j++){
             if(e->grilla[i][j]==PART_SIN_MOVIMIENTO){
                 clon=clonar_estado(e);
                 clon->grilla[i][j]=ficha_jugador;
@@ -328,8 +332,10 @@ La posici�n en la que los estados difiere, es retornada en los par�metros *X
 **/
 static void diferencia_estados(tEstado anterior, tEstado nuevo, int * x, int * y){
    int  encontrado = 0;
-    for(int i=0; i<3 && !encontrado; i++){
-        for(int j=0; j<3 && !encontrado; j++){
+    int i;
+    int j;
+    for(i=0; i<3 && !encontrado; i++){
+        for(j=0; j<3 && !encontrado; j++){
             if (anterior->grilla[i][j] != nuevo->grilla[i][j]){
                 *x = i;
                 *y = j;

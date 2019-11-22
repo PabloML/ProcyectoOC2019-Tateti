@@ -7,6 +7,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+/**
+Determina aleatoriamente que jugador iniciara la partida si se selecciona la opcion PART_JUGADOR_RANDOM
+**/
+int jugadorRamdom(){
+    int jugador;
+    int num= rand()%2;
+    if(num==0)
+        jugador=PART_JUGADOR_1;
+    else
+        jugador=PART_JUGADOR_2;
+
+    return jugador;
+}
 
 /**
 Inicializa una nueva partida, indicando:
@@ -26,8 +39,10 @@ void nueva_partida(tPartida * p, int modo_partida, int comienza, char * j1_nombr
     (*p)->turno_de=comienza;
     (*p)->tablero=malloc(sizeof(struct tablero));
 
-    for(int i=0;i<3;i++){
-        for(int j=0;j<3;j++){
+    int i;
+    int j;
+    for(i=0;i<3;i++){
+        for(j=0;j<3;j++){
             ((*p)->tablero)->grilla[i][j]=PART_SIN_MOVIMIENTO;
         }
     }
@@ -65,9 +80,11 @@ int controlGanador(tTablero tablero){
                                         ocupa= tablero->grilla[2][2];
 
 
+    int i;
+    int j;
     if(ocupa == -1) {
-       for(int i=0; i<3; i++)
-                    for(int j=0; j<3; j++)
+       for(i=0; i<3; i++)
+                    for(j=0; j<3; j++)
                         if(tablero->grilla[i][j]==PART_SIN_MOVIMIENTO)
                             return PART_EN_JUEGO;
         return PART_EMPATE;
@@ -115,18 +132,4 @@ Finaliza la partida referenciada por P, liberando toda la memoria utilizada.
 void finalizar_partida(tPartida * p){
     free((*p)->tablero);
     free(*p);
-}
-
-/**
-Determina aleatoriamente que jugador iniciara la partida si se selecciona la opcion PART_JUGADOR_RANDOM
-**/
-int jugadorRamdom(){
-    int jugador;
-    int num= rand()%2;
-    if(num==0)
-        jugador=PART_JUGADOR_1;
-    else
-        jugador=PART_JUGADOR_2;
-
-    return jugador;
 }

@@ -7,6 +7,29 @@
 #include <stdio.h>
 #include <string.h>
 
+/**
+ Dibuja la tabla
+**/
+void dibujarTabla(tPartida p) {
+    printf("\n");
+    int i;
+    int j;
+    for (i = 0; i < 3; i++) {
+        for (j = 0; j < 3; j++) {
+            if(p->tablero->grilla[i][j]==PART_SIN_MOVIMIENTO){
+                printf("    _");
+            }
+            else
+                if(p->tablero->grilla[i][j]==PART_JUGADOR_1)
+                    printf("    O");
+                else
+                    if(p->tablero->grilla[i][j]==PART_JUGADOR_2)
+                        printf("    X");
+
+        }
+        printf("\n\n");
+    }
+}
 
 void partidaUsuarioUsuario(tPartida p){
     int x;
@@ -53,6 +76,11 @@ void partidaUsuarioUsuario(tPartida p){
         printf("\nGRACIAS POR JUGAR");
     }
 }
+
+void limpiarConsola(){
+        system("cls");
+    }
+
 void  partidaUsuarioComputadora(tPartida p){
     int x;
     int y;
@@ -220,29 +248,4 @@ int main(){
             }
         }
     return 0;
-}
-
-    void limpiarConsola(){
-        system("cls");
-    }
-/**
- Dibuja la tabla
-**/
-void dibujarTabla(tPartida p) {
-    printf("\n");
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            if(p->tablero->grilla[i][j]==PART_SIN_MOVIMIENTO){
-                printf("    _");
-            }
-            else
-                if(p->tablero->grilla[i][j]==PART_JUGADOR_1)
-                    printf("    O");
-                else
-                    if(p->tablero->grilla[i][j]==PART_JUGADOR_2)
-                        printf("    X");
-
-        }
-        printf("\n\n");
-    }
 }
