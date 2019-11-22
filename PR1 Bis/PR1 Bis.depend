@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1574267058 source:d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr1 bis\arbol.c
+	<stdio.h>
+	<stdlib.h>
+	"arbol.h"
+	"lista.h"
+
+1574203903 d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr1 bis\arbol.h
+	"lista.h"
+
+1574203903 d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr1 bis\lista.h
+
+1574307227 source:d:\usuarios\flia. lencina\biblioteca\documentos\programas pablo\organización de las computadoras\cursada 2019\proyecto\procyectooc2019-tateti\pr1 bis\tester.c
+	<stdio.h>
+	<stdlib.h>
+	"lista.h"
+	"arbol.h"
+
