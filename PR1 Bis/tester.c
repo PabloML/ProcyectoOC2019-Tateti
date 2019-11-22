@@ -211,7 +211,7 @@ int main()
                                 n=l_recuperar(a->raiz->hijos,l_primera(a->raiz->hijos));
                                 printf("El primer hijo de la raiz es %i\n",((tEntero)n->elemento)->entero);
                                 printf("El padre del nodo con elemento %i es %i\n",((tEntero)n->elemento)->entero,((tEntero)n->padre->elemento)->entero );
-                                 printf("El elemento de la raiz del nuevo arbol es %i\n", ((tEntero) arbol->raiz->elemento)->entero);
+                                printf("El elemento de la raiz del nuevo arbol es %i\n", ((tEntero) arbol->raiz->elemento)->entero);
                             }
                             else exit(ARB_ERROR_MEMORIA);
                         }

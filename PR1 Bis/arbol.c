@@ -318,20 +318,16 @@ extern void a_sub_arbol(tArbol a, tNodo n, tArbol * sa)
     crear_arbol(sa);
     crear_raiz(*sa,n->elemento);
     (*sa)->raiz->hijos=n->hijos;
-     if(n!=a->raiz){
-                      listaDeHermanos=n->padre->hijos;
-                      pos=l_primera(listaDeHermanos);
-                      fin=l_fin(listaDeHermanos);
-                      while(pos!=fin && l_recuperar(listaDeHermanos,pos)!=n){
-                          pos=l_siguiente(listaDeHermanos,pos);
-                      }
-                      if(pos!=fin){
-                            exit(ARB_POSICION_INVALIDA);
-                      }
-                      else
-                          l_eliminar(listaDeHermanos,pos,falsoEliminar);
-                          n->padre=NULL;
-
-
-                   }
+     if(n!=a->raiz)
+     {
+       listaDeHermanos=n->padre->hijos;
+       pos=l_primera(listaDeHermanos);
+       fin=l_fin(listaDeHermanos);
+       while(pos!=fin && l_recuperar(listaDeHermanos,pos)!=n)
+       {
+           pos=l_siguiente(listaDeHermanos,pos);
+       }
+       l_eliminar(listaDeHermanos,pos,falsoEliminar);
+       n->padre=POS_NULA;
+    }
 }
