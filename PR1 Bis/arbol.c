@@ -315,10 +315,7 @@ extern void a_sub_arbol(tArbol a, tNodo n, tArbol * sa)
          }
     tLista listaDeHermanos ;
     tPosicion pos,fin;
-    if ((*sa)==POS_NULA)
-                    {
-                        crear_arbol(sa);
-                    }
+    crear_arbol(sa);
     crear_raiz(*sa,n->elemento);
     (*sa)->raiz->hijos=n->hijos;
      if(n!=a->raiz){
