@@ -30,13 +30,14 @@ extern void crear_lista(tLista * l);
 extern void l_insertar(tLista l, tPosicion p, tElemento e);
 
 /**
- Elimina la celda P de L. El elemento almacenado en la posición P es eliminado mediante la función fEliminar parametrizada.
+ Elimina el nodo que se encuentra en la posición P de L.
+ El elemento almacenado en la posición P es eliminado mediante la función fEliminar parametrizada.
  Si P es fin(L), finaliza indicando LST_POSICION_INVALIDA.
 **/
 extern void l_eliminar(tLista l, tPosicion p, void (*fEliminar)(tElemento));
 
 /**
- Destruye la lista L, elimininando cada una de sus celdas. Los elementos almacenados en las celdas son eliminados mediante la función fEliminar parametrizada.
+ Destruye la lista L, elimininando cada una de sus posiciones. Los elementos almacenados en las posiciones son eliminados mediante la función fEliminar parametrizada.
 **/
 extern void l_destruir(tLista * l, void (*fEliminar)(tElemento));
 
@@ -76,9 +77,5 @@ extern tPosicion l_ultima(tLista l);
 **/
 extern tPosicion l_fin(tLista l);
 
-/**
- Retorna la longitud actual de la lista.
-**/
-extern int l_longitud(tLista l);
 
 #endif // LISTA_H_INCLUDED
